@@ -3,15 +3,13 @@ const router = express.Router();
 const loginPage = require('../lib/loginPage');
 const registerPage = require('../lib/registerPage');
 const crypto = require('crypto');
+const Itis = require('../gitignore');
 
 const mysql = require('mysql');
 
-const db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'zjvld1234!',
-    database : 'coffing_database'
-});
+const db = mysql.createConnection(
+    Itis.DBinfor
+);
 
 
 module.exports = function(passport){

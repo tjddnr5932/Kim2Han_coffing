@@ -1,11 +1,9 @@
-var mysql = require('mysql');
+const mysql = require('mysql');
+const Itis = require('./gitignore');
 
-var db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'zjvld1234!',
-    database : 'coffing_database'
-  });
+const db = mysql.createConnection(
+  Itis.DBinfor
+);
 
   db.connect();  
   

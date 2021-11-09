@@ -6,14 +6,13 @@ const sanitizeHtml = require('sanitize-html');
 const MyPage = require('../lib/MyPage');
 const tasteSetting = require('../lib/mypages/tasteSetting.js');
 const locationSetting = require('../lib/mypages/locationSetting.js');
+const Itis = require('../gitignore');
 const mysql = require('mysql');
 
-const db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'zjvld1234!',
-    database : 'coffing_database'
-});
+
+const db = mysql.createConnection(
+    Itis.DBinfor
+);
 
 
 router.get('/', function(request, response, next){

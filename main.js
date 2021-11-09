@@ -2,13 +2,13 @@ const express = require('express');
 var session = require('express-session')
 const compression = require('compression');
 const FileStore = require('session-file-store')(session);
-
+const Itis = require('./gitignore');
 const app = express();
 
 app.use(express.urlencoded({extended : false}));
 app.use(compression());
 app.use(session({
-    secret: 'asd54687zx#csw!',
+    secret: Itis.secret,
     resave: false,
     saveUninitialized: true,
     store:new FileStore()
@@ -18,6 +18,7 @@ const passport = require('./lib/passport')(app);
 const mypageRouter = require('./routes/mypageRouter');
 const auth = require('./routes/auth')(passport);
 const index = require('./routes/index');
+const dev = require('./gitignore');
 
 
 app.use('/', index); //메인페이지
