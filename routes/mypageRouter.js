@@ -50,6 +50,12 @@ router.post('/taste_process', function(request, response){
     response.end();
 });
 
+router.post('/location_process', function(request, response){
+    var post = request.body;
+    response.writeHead(302, {Location : '/mypage'});
+    response.end();
+});
+
 router.post('/:pageId', function(request, response, next){
     var filterId = path.parse(request.params.pageId).base;
     fs.readFile(`./lib/mypages/${filterId}.js`, 'utf-8', function(error){
