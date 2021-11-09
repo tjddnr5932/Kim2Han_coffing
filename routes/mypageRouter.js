@@ -8,12 +8,10 @@ const tasteSetting = require('../lib/mypages/tasteSetting.js');
 const locationSetting = require('../lib/mypages/locationSetting.js');
 const mysql = require('mysql');
 
-const db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'zjvld1234!',
-    database : 'coffing_database'
-});
+const confiInfor = require('../dev/cofiInfor');
+const db = mysql.createConnection(
+    confiInfor.DBinfor
+);
 
 
 router.get('/', function(request, response, next){
@@ -22,16 +20,21 @@ router.get('/', function(request, response, next){
             next(error);
         }
         else{
-            var title = "MyPage";
-            var list = ["위치 설정", "자격증 인증", "맛 설정"];
-            if(list.length === filelist.length){
-                var flist = MyPage.list(filelist, list);
-                var html = MyPage.HTML(title, flist);
-                response.send(html);
+            if(request.user===undefined) {
+                return response.redirect('/');
             }
             else{
-                console.log("마이페이지 리스트의 개수가 갖지 않습니다.");
-                response.send("서버에 오류가 발생했습니다.");
+                var title = "MyPage";
+                var list = ["위치 설정", "자격증 인증", "맛 설정"];
+                if(list.length === filelist.length){
+                    var flist = MyPage.list(filelist, list);
+                    var html = MyPage.HTML(title, flist);
+                    response.send(html);
+                }
+                else{
+                    console.log("마이페이지 리스트의 개수가 갖지 않습니다.");
+                    response.send("서버에 오류가 발생했습니다.");
+                }
             }
         }
     });
@@ -40,8 +43,9 @@ router.get('/', function(request, response, next){
 router.post('/taste_process', function(request, response){
     var post = request.body;
     var taste = post.body+ "/" + post.sweet + "/" + post.acidity + "/" + post.btterness + "/" + post.balance
-    db.query('UPDATE user SET taste = ' + '"' + taste + '"' + ' WHERE id = "test1"');
-    console.log('UPDATE user SET taste = ' + '"' + taste + '"' + ' WHERE id = "test1"');
+    var id = request.user.id;
+    db.query('UPDATE user SET taste = ' + '"' + taste + '"' + ' WHERE id = ' + '"' + id + '"');
+    console.log('UPDATE user SET taste = ' + '"' + taste + '"' + ' WHERE id = ' + '"' + id + '"');
     response.writeHead(302, {Location : '/mypage'});
     response.end();
 });

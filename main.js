@@ -2,13 +2,14 @@ const express = require('express');
 var session = require('express-session')
 const compression = require('compression');
 const FileStore = require('session-file-store')(session);
+const confiInfor = require('./dev/cofiInfor');
 
 const app = express();
 
 app.use(express.urlencoded({extended : false}));
 app.use(compression());
 app.use(session({
-    secret: 'asd54687zx#csw!',
+    secret: confiInfor.secret,
     resave: false,
     saveUninitialized: true,
     store:new FileStore()
