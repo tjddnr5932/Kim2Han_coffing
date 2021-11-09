@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const sanitizeHtml = require('sanitize-html');
+const nodeGeocoder = require('node-geocoder');
 const MyPage = require('../lib/MyPage');
 const tasteSetting = require('../lib/mypages/tasteSetting.js');
 const locationSetting = require('../lib/mypages/locationSetting.js');
@@ -12,6 +13,11 @@ const confiInfor = require('../dev/cofiInfor');
 const db = mysql.createConnection(
     confiInfor.DBinfor
 );
+
+const geocoder = nodeGeocoder({ 
+    provider : 'google', 
+    apiKey : 'AIzaSyCMDf2l1t3TI4vWzFFYXN8R44KaGsP0Gl4',
+    formatter: null });
 
 
 router.get('/', function(request, response, next){
@@ -50,8 +56,47 @@ router.post('/taste_process', function(request, response){
     response.end();
 });
 
+router.post('/mlocation_process', function(request, response){
+    var post = request.body;
+    var _lat = post.lat;
+    var _lng = post.lng;
+
+    geocoder.reverse({lat:_lat, lon:_lng})
+    .then((res)=> {
+    console.log(res);
+    })
+    .catch((err)=> {
+    console.log(err);
+    });
+
+    console.log(`lat : ${_lat}, lng : ${_lng}`);
+
+    db.query(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${_lat}, ${_lng})`);
+    console.log(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${_lat}, ${_lng})`);
+
+    response.writeHead(302, {Location : '/mypage'});
+    response.end();
+});
+
 router.post('/location_process', function(request, response){
     var post = request.body;
+    var loc = post.loc;
+    var lat;
+    var lng;
+
+    geocoder.geocode(loc)
+    .then((res)=> {
+    console.log(res);
+    })
+    .catch((err)=> {
+    console.log(err);
+    });
+
+    console.log(`loc: ${loc}, lat : ${lat}, lng : ${lng}`);
+
+    //db.query(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${lat}, ${lng})`);
+    //console.log(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${lat}, ${lng})`);
+
     response.writeHead(302, {Location : '/mypage'});
     response.end();
 });
@@ -79,3 +124,4 @@ router.post('/:pageId', function(request, response, next){
 
 
 module.exports = router;
+
