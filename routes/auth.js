@@ -2,16 +2,13 @@ const express = require('express');
 const router = express.Router();
 const loginPage = require('../lib/loginPage');
 const registerPage = require('../lib/registerPage');
-const crypto = require('crypto');
 
 const mysql = require('mysql');
 
-const db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'zjvld1234!',
-    database : 'coffing_database'
-});
+const confiInfor = require('../dev/cofiInfor');
+const db = mysql.createConnection(
+    confiInfor.DBinfor
+);
 
 
 module.exports = function(passport){
@@ -57,18 +54,18 @@ module.exports = function(passport){
                     var i = 0;
                     while(i<result.length){
                         if(id===result[i].id){
-                            return response.send("<script>alert('중복되는 아이디가 있습니다.');location.href='/auth/register';</script>");
+                            response.redirect('/auth/register');
                         }
                         i++;
                     }
                 }
             });
             if(pw!==pw2){
-                return response.send("<script>alert('비밀번호가 일치하지 않습니다.');location.href='/auth/register';</script>");
+                response.redirect('/auth/register');
             }
             else{
                 
-                pw = crypto.createHash('sha512').update(pw).digest('base64');
+                pw = confiInfor.encoder(pw);
 
                 var values ='"' + id + '"' + ',' + '"' + pw + '"' + ',' + '"' + name + '"' + ',' + '"' + phoneNum + '"' + ',' + '"' + gender + '"' + ',' + age + ',' + '"' + birth + '"';
                 db.query('INSERT INTO user(id, password, name, phoneNum, gender, age, birth) values(' + values + ')', function(error){
