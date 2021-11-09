@@ -15,9 +15,7 @@ const db = mysql.createConnection(
 );
 
 const geocoder = nodeGeocoder({ 
-    provider : 'google', 
-    apiKey : 'AIzaSyCMDf2l1t3TI4vWzFFYXN8R44KaGsP0Gl4',
-    formatter: null });
+    provider : 'openstreetmap'});
 
 
 router.get('/', function(request, response, next){
@@ -58,21 +56,19 @@ router.post('/taste_process', function(request, response){
 
 router.post('/mlocation_process', function(request, response){
     var post = request.body;
+    var loc;
     var _lat = post.lat;
     var _lng = post.lng;
 
-    geocoder.reverse({lat:_lat, lon:_lng})
+    geocoder.reverse({lat:parseFloat(_lat), lon:parseFloat(_lng)})
     .then((res)=> {
-    console.log(res);
+        loc = res[0].formattedAddress;
+        db.query(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        console.log(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
     })
     .catch((err)=> {
-    console.log(err);
+        console.log(err);
     });
-
-    console.log(`lat : ${_lat}, lng : ${_lng}`);
-
-    db.query(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${_lat}, ${_lng})`);
-    console.log(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${_lat}, ${_lng})`);
 
     response.writeHead(302, {Location : '/mypage'});
     response.end();
@@ -81,21 +77,19 @@ router.post('/mlocation_process', function(request, response){
 router.post('/location_process', function(request, response){
     var post = request.body;
     var loc = post.loc;
-    var lat;
-    var lng;
+    var _lat;
+    var _lng;
 
     geocoder.geocode(loc)
     .then((res)=> {
-    console.log(res);
+        _lat = res[0].latitude;
+        _lng = res[0].longitude;
+        db.query(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        console.log(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
     })
     .catch((err)=> {
     console.log(err);
     });
-
-    console.log(`loc: ${loc}, lat : ${lat}, lng : ${lng}`);
-
-    //db.query(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${lat}, ${lng})`);
-    //console.log(`INSERT INTO user(location, latitude, longitude) values(${loc}, ${lat}, ${lng})`);
 
     response.writeHead(302, {Location : '/mypage'});
     response.end();
