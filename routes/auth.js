@@ -3,7 +3,7 @@ const router = express.Router();
 const loginPage = require('../lib/loginPage');
 const registerPage = require('../lib/registerPage');
 const crypto = require('crypto');
-const Itis = require('../gitignore');
+const Itis = require('../dev/cofiInfor');
 
 const mysql = require('mysql');
 

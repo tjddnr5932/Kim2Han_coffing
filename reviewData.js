@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const Itis = require('./gitignore');
+const Itis = require('./dev/cofiInfor');
 
 const db = mysql.createConnection(
   Itis.DBinfor

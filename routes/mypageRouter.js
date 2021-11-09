@@ -6,7 +6,7 @@ const sanitizeHtml = require('sanitize-html');
 const MyPage = require('../lib/MyPage');
 const tasteSetting = require('../lib/mypages/tasteSetting.js');
 const locationSetting = require('../lib/mypages/locationSetting.js');
-const Itis = require('../gitignore');
+const Itis = require('../dev/cofiInfor');
 const mysql = require('mysql');
 
 
