@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const sanitizeHtml = require('sanitize-html');
+const nodeGeocoder = require('node-geocoder');
 const MyPage = require('../lib/MyPage');
 const tasteSetting = require('../lib/mypages/tasteSetting.js');
 const locationSetting = require('../lib/mypages/locationSetting.js');
@@ -12,6 +13,9 @@ const confiInfor = require('../dev/cofiInfor');
 const db = mysql.createConnection(
     confiInfor.DBinfor
 );
+
+const geocoder = nodeGeocoder({ 
+    provider : 'openstreetmap'});
 
 
 router.get('/', function(request, response, next){
@@ -50,8 +54,43 @@ router.post('/taste_process', function(request, response){
     response.end();
 });
 
+router.post('/mlocation_process', function(request, response){
+    var post = request.body;
+    var loc;
+    var _lat = post.lat;
+    var _lng = post.lng;
+
+    geocoder.reverse({lat:parseFloat(_lat), lon:parseFloat(_lng)})
+    .then((res)=> {
+        loc = res[0].formattedAddress;
+        db.query(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        console.log(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+    })
+    .catch((err)=> {
+        console.log(err);
+    });
+
+    response.writeHead(302, {Location : '/mypage'});
+    response.end();
+});
+
 router.post('/location_process', function(request, response){
     var post = request.body;
+    var loc = post.loc;
+    var _lat;
+    var _lng;
+
+    geocoder.geocode(loc)
+    .then((res)=> {
+        _lat = res[0].latitude;
+        _lng = res[0].longitude;
+        db.query(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        console.log(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+    })
+    .catch((err)=> {
+    console.log(err);
+    });
+
     response.writeHead(302, {Location : '/mypage'});
     response.end();
 });
@@ -79,3 +118,4 @@ router.post('/:pageId', function(request, response, next){
 
 
 module.exports = router;
+
