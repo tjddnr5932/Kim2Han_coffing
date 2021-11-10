@@ -1,27 +1,27 @@
-var mysql = require('mysql');
+const mysql = require('mysql');
 
-var db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'zjvld1234!',
-    database : 'coffing_database'
-  });
+const confiInfor = require('./dev/cofiInfor');
+const db = mysql.createConnection(
+    confiInfor.DBinfor
+);
 
-  db.connect();  
+db.connect();  
   
 function calc(reviews){
   if(reviews==="review_pro")console.log('----------카페리뷰테이블 업데이트 실행----------');
   db.query('SELECT * from '+ reviews, function (error, review, fields) { //review 데이터를 받아옴
     console.log('SELECT * from '+ reviews);
     var i = 0;
-    var cafe_name = [];
-    var body = [];
-    var sweet = [];
-    var acidity = [];
-    var btterness = [];
-    var balance = [];
+    let cafe_id = [];
+    let cafe_name = [];
+    let body = [];
+    let sweet = [];
+    let acidity = [];
+    let btterness = [];
+    let balance = [];
 
     while(i<review.length){ //리뷰데이터에서 인덱스 별로 카페명과 맛을 배열로 정리
+      cafe_id.push(review[i].cafe_id);
       cafe_name.push(review[i].cafe_name);
       body.push(review[i].body);
       sweet.push(review[i].sweet);
@@ -32,14 +32,12 @@ function calc(reviews){
       i++;
     }
 
-    const cafe_set = new Set(cafe_name);
+    const cafe_set = new Set(cafe_id);
     const cafe_list = Array.from(cafe_set);
-
-    console.log("\n리뷰가 있는 카페 리스트: " + cafe_list + '\n');
 
     i=0;
     while(i<cafe_list.length){ //카페명이 같은 점수들을 더함
-      var idx = cafe_name.indexOf(cafe_list[i])
+      var idx = cafe_id.indexOf(cafe_list[i]);
       var result = [];
       var bo = 0;
       var sw = 0;
@@ -53,7 +51,7 @@ function calc(reviews){
         ac += acidity[idx];
         bt += btterness[idx];
         ba += balance[idx];
-        idx = cafe_name.indexOf(cafe_list[i], idx + 1);
+        idx = cafe_id.indexOf(cafe_list[i], idx + 1);
       }
       var count = result.length;
 
@@ -63,9 +61,11 @@ function calc(reviews){
         ac = ac/count;
         bt = bt/count;
         ba = ba/count;
+        
+        const taste = bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba;
 
-        db.query('UPDATE cafe SET ' + ' cafe_' + reviews + '="' +  bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba + '" WHERE cafe_name = "' + cafe_list[i] + '"');
-        console.log('UPDATE cafe SET ' + ' cafe_' + reviews + '="' +  bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba + '" WHERE cafe_name = "' + cafe_list[i] + '"');
+        db.query(`UPDATE cafe SET cafe_${reviews} = "${taste}" WHERE cafe_id = "${cafe_list[i]}"`);
+        console.log(`UPDATE cafe SET cafe_${reviews} = "${taste}" WHERE cafe_id = "${cafe_list[i]}"`);
 
         console.log(cafe_list[i] + "의 평점: " + bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba);
       }
