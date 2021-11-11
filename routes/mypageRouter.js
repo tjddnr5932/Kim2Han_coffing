@@ -7,14 +7,25 @@ const nodeGeocoder = require('node-geocoder');
 const MyPage = require('../lib/MyPage');
 const tasteSetting = require('../lib/mypages/tasteSetting.js');
 const locationSetting = require('../lib/mypages/locationSetting.js');
+const proofSetting = require('../lib/mypages/proof.js');
 const mysql = require('mysql');
+const multer = require('multer');
+var _storage = multer.diskStorage({
+  destination:function(req,file,cb){
+    cb(null,'uploads/')
+  },
+  filename:function(req,file,cb){
+    cb(null, file.originalname);
+  }
+})
+const upload = multer({storage:_storage});
 
 const confiInfor = require('../dev/cofiInfor');
 const db = mysql.createConnection(
     confiInfor.DBinfor
 );
 
-const geocoder = nodeGeocoder({ 
+const geocoder = nodeGeocoder({
     provider : 'openstreetmap'});
 
 
@@ -42,6 +53,34 @@ router.get('/', function(request, response, next){
             }
         }
     });
+});
+
+router.post('/upload_process',upload.single("name"),function(req,res){
+  db.query(`SELECT COUNT(*) as total FROM proof_data`,function(error, count){
+    if(error){
+      console.log(error);
+    }
+    else{
+      db.query(`SELECT id FROM proof_data WHERE id="${req.user.id}"`,function(error, sql){
+        if(error){
+          console.log(error);
+        }
+        else if(sql[0] === undefined ){          //proof_data 데이터베이스안에 유저의 id가 없을 때
+          db.query('insert into proof_data(num,id,img) values (?,?,?)',[count[0].total+1,req.user.id,req.file.path],function(req,res){
+            console.log(req.user.id +' : '+"사진 저장");
+          });
+        }
+        else{                                  //proof_data 데이터베이스안에 유저의 id가 있을때 중복제거
+          console.log(req.file.path);
+          db.query(`update proof_data set img=? where id = "${req.user.id}"`,[req.file.path],function(req,res){
+            console.log("중복 제거");
+          });
+        }
+      });
+    }
+  });
+  res.writeHead(302, {Location : '/mypage'});
+  res.end();
 });
 
 router.post('/taste_process', function(request, response){
@@ -112,10 +151,13 @@ router.post('/:pageId', function(request, response, next){
                 var html = locationSetting.HTML(sanitizeTitle);
                 response.send(html);
             }
+            if(title === "proof"){
+              var html = proofSetting.HTML(sanitizeTitle);
+              response.send(html);
+            }
         }
     });
 });
 
 
 module.exports = router;
-
