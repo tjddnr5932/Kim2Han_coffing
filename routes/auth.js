@@ -12,24 +12,23 @@ const db = mysql.createConnection(
 
 
 module.exports = function(passport){
-
     router.get('/login', function(request, response, next){
         request.session.lognum = request.session.lognum + 1;
         var title = "로그인 페이지";
         var html = loginPage.HTML(title, request.session.lognum);
         response.send(html);
     });
-    
+
     router.get('/success', function(request, response, next){
         response.redirect('/');
     });
-    
+
     router.post('/login_process',
         passport.authenticate('local', {
             successRedirect: '/auth/success',
             failureRedirect: '/auth/login'
     }));
-    
+
     router.get('/register', function(request, response, next){
         var title = "회원가입 페이지";
         var html = registerPage.HTML(title);
@@ -64,7 +63,7 @@ module.exports = function(passport){
                 response.redirect('/auth/register');
             }
             else{
-                
+
                 pw = confiInfor.encoder(pw);
 
                 var values ='"' + id + '"' + ',' + '"' + pw + '"' + ',' + '"' + name + '"' + ',' + '"' + phoneNum + '"' + ',' + '"' + gender + '"' + ',' + age + ',' + '"' + birth + '"';
@@ -79,7 +78,7 @@ module.exports = function(passport){
                 })
             }
     });
-    
+
 
     router.get('/logout_process', function(request, response, next){
         console.log(request.user.id + "이/가 로그아웃")
