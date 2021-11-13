@@ -5,6 +5,8 @@ const FileStore = require('session-file-store')(session);
 const confiInfor = require('./dev/cofiInfor');
 const app = express();
 
+app.use(express.static('image'));
+
 app.use(express.urlencoded({extended : false}));
 app.use(compression());
 app.use(session({
@@ -14,24 +16,13 @@ app.use(session({
     store:new FileStore()
 }));
 
+
 const passport = require('./lib/passport')(app);
 const mypageRouter = require('./routes/mypageRouter');
 const auth = require('./routes/auth')(passport);
 const index = require('./routes/index');
 
 app.use('/', index); //메인페이지
-
-/*app.get('/cafe/:img',function(request, response, next){
-    var filterId = path.parse(request.params.img).base;
-    fs.readFile(`./cafe/${filterId}.jpg`, function(error){
-        if(error){
-            next(error);
-        }
-        else{
-
-        }
-    });
-});*/
 
 app.use('/auth', auth); //로그인 및 회원가입
 
