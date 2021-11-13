@@ -30,8 +30,7 @@ const db = mysql.createConnection(
     confiInfor.DBinfor
 );
 
-const geocoder = nodeGeocoder({
-    provider : 'openstreetmap'});
+const geocoder = nodeGeocoder({provider : 'openstreetmap'});
 
 
 router.get('/', function(request, response, next){
@@ -219,6 +218,8 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           var cafe_review_pro = result[0].cafe_review_pro;
           if(cafe_review_pro===null) cafe_review_pro ="죄송합니다. 아직 리뷰데이터가 적습니다."
           const scope = result[0].scope;
+          //const photoStr = result[0].photo;
+          //const photo = JSON.parse(photoStr);
 
           var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
 
