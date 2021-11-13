@@ -1,0 +1,75 @@
+/* html{
+    background-color: black;
+    color : white;
+} */
+
+header{
+    height: 100px;
+}
+/* main{
+    background-image: url("./cafe3.jpg");
+    background-size: 100%;
+    color: white;
+} */
+.inputA {
+    width: 300px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.inputB {
+    text-align: center;
+
+    width: 96px;
+    height: 42px;
+    margin: 8px 0;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.picture{
+    width: 180px;
+    height: 320px;
+    border: 1px solid black;
+}
+.map{
+    width: 520px;
+    height: 310px;
+    border: 1px solid black;
+}
+.inputA2 {
+    width: 420px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.inputB2 {
+    text-align: center;
+    width: 96px;
+    height: 42px;
+    margin: 8px 0;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border: 1px solid white;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.inputB3 {
+    text-align: center;
+    width: 192px;
+    height: 42px;
+    margin: 8px 0;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
