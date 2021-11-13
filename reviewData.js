@@ -19,6 +19,7 @@ function calc(reviews){
     let acidity = [];
     let btterness = [];
     let balance = [];
+    let scope = [];
 
     while(i<review.length){ //리뷰데이터에서 인덱스 별로 카페명과 맛을 배열로 정리
       cafe_id.push(review[i].cafe_id);
@@ -28,7 +29,8 @@ function calc(reviews){
       acidity.push(review[i].acidity);
       btterness.push(review[i].btterness);
       balance.push(review[i].balance);
-      console.log(i + 1 + " 번째 리뷰 \n카페명: " + cafe_name[i] + "\n맛: " + body[i]+'/'+sweet[i]+'/'+acidity[i]+'/'+btterness[i]+'/'+balance[i]);
+      scope.push(review[i].scope);
+      console.log(i + 1 + " 번째 리뷰 \n카페명: " + cafe_name[i] + "\n맛: " + body[i]+'/'+sweet[i]+'/'+acidity[i]+'/'+btterness[i]+'/'+balance[i]  + "\n별점: " + scope[i]);
       i++;
     }
 
@@ -44,6 +46,7 @@ function calc(reviews){
       var ac = 0;
       var bt = 0;
       var ba = 0;
+      var sc = 0;
       while (idx != -1) {
         result.push(idx);
         bo += body[idx];
@@ -51,6 +54,7 @@ function calc(reviews){
         ac += acidity[idx];
         bt += btterness[idx];
         ba += balance[idx];
+        sc += scope[idx];
         idx = cafe_id.indexOf(cafe_list[i], idx + 1);
       }
       var count = result.length;
@@ -61,13 +65,14 @@ function calc(reviews){
         ac = ac/count;
         bt = bt/count;
         ba = ba/count;
+        sc = sc/count;
         
         const taste = bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba;
 
-        db.query(`UPDATE cafe SET cafe_${reviews} = "${taste}" WHERE cafe_id = "${cafe_list[i]}"`);
-        console.log(`UPDATE cafe SET cafe_${reviews} = "${taste}" WHERE cafe_id = "${cafe_list[i]}"`);
+        db.query(`UPDATE cafe SET cafe_${reviews} = "${taste}", scope = ${sc} WHERE cafe_id = "${cafe_list[i]}"`);
+        console.log(`UPDATE cafe SET cafe_${reviews} = "${taste}", scope = ${sc} WHERE cafe_id = "${cafe_list[i]}"`);
 
-        console.log(cafe_list[i] + "의 평점: " + bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba);
+        console.log(cafe_list[i] + "의 평점: " + bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba + "     별점: " + sc);
       }
 
       i++;
