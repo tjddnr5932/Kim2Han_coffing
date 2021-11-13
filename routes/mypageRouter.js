@@ -10,6 +10,7 @@ const locationSetting = require('../lib/mypages/locationSetting.js');
 const proofSetting = require('../lib/mypages/proof.js');
 const visitedList = require('../lib/mypages/visitedList.js');
 const writeReview = require('../lib/writeReview.js');
+const viewCafe = require('../lib/viewCafe.js');
 const mysql = require('mysql');
 const multer = require('multer');
 
@@ -163,8 +164,81 @@ router.post('/visit_cafe', function(request, response){  // 아직 미구현된 
 });
 
 
-router.post('/view_cafe', function(request,response){ //카페 정보 보기
+router.post('/comment_public', function(request, response){ //일반인 댓글 보기
+  const post = request.body;
+  const cafe_id = post.cafe_id;
+  db.query(`SELECT comment FROM review_public WHERE cafe_id = "${cafe_id}"`, function(error, result){
+    var body = "<h1>일반인 댓글 보기<h1>";
+    var i = 0;
+    while(i<result.length){
+      body+=`<p>${result[i].comment}</p></br>`;
+      i++;
+    }
+    var html = viewCafe.HTML(cafe_id, body);
+    response.send(html);
+  });
+});
 
+
+router.post('/comment_pro', function(request, response){ //전문가 댓글 보기
+  const post = request.body;
+  const cafe_id = post.cafe_id;
+  db.query(`SELECT comment FROM review_pro WHERE cafe_id = "${cafe_id}"`, function(error, result){
+    var body = "<h1>전문가 댓글 보기<h1>";
+    var i = 0;
+    var count = 0;
+    while(i<result.length){
+      if(result[i].comment!==""||result[i].comment==null);
+      else body+=`<p>${result[i].comment}</p></br>`;
+      i++;
+    }
+    var html = viewCafe.HTML(cafe_id, body);
+    response.send(html);
+  });
+});
+
+
+router.post('/view_cafe', function(request,response){ //카페 정보 보기
+  const post = request.body;
+  const cafe_id = post.cafe_id;
+  db.query(`SELECT * FROM cafe WHERE cafe_id = "${cafe_id}"`, function(error, result){
+    if(error){
+      console.log(error);
+    }
+    else{
+      db.query(`SELECT latitude, longitude FROM user WHERE id = "${request.user.id}"`, function(err, res){
+        if(err){
+          console.log(err);
+        }
+        else{
+          const cafe_name = result[0].cafe_name;
+          const cafe_location = result[0].cafe_location;
+          const cafe_bean = result[0].cafe_bean;
+          var cafe_review_public = result[0].cafe_review_public;
+          if(cafe_review_public===null) cafe_review_public ="죄송합니다. 아직 리뷰데이터가 적습니다."
+          var cafe_review_pro = result[0].cafe_review_pro;
+          if(cafe_review_pro===null) cafe_review_pro ="죄송합니다. 아직 리뷰데이터가 적습니다."
+          const scope = result[0].scope;
+
+          var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
+
+          var body = `        
+          <h1>${cafe_name}</h1>
+          <p>${cafe_location}</p>
+          <p>${cafe_bean}</p>
+          <p>${cafe_review_public}</p>
+          <p>${cafe_review_pro}</p>
+          <p>${scope}</p>
+          <p>${distance}m</p>
+          `
+          
+          var html = viewCafe.HTML(cafe_id, body);
+          response.send(html);
+          
+        }
+      });
+    }
+  });
 });
 
 
@@ -319,6 +393,7 @@ router.post('/:pageId', function(request, response, next){
                         <div>
                         ${res[0].cafe_name}
                         <form action="view_cafe" method="post">
+                        <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                         <input type="submit" value="카페 정보">
                         </form>
                         </div>
@@ -330,6 +405,7 @@ router.post('/:pageId', function(request, response, next){
                         <div>
                         ${res[0].cafe_name}
                         <form action="view_cafe" method="post">
+                        <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                         <input type="submit" value="카페 정보">
                         </form>             
                         <form action="write_review" method="post">

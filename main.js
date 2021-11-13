@@ -3,7 +3,6 @@ var session = require('express-session')
 const compression = require('compression');
 const FileStore = require('session-file-store')(session);
 const confiInfor = require('./dev/cofiInfor');
-
 const app = express();
 
 app.use(express.urlencoded({extended : false}));
@@ -19,7 +18,7 @@ const passport = require('./lib/passport')(app);
 const mypageRouter = require('./routes/mypageRouter');
 const auth = require('./routes/auth')(passport);
 const index = require('./routes/index');
-
+const { fstat } = require('fs');
 
 app.use('/', index); //메인페이지
 
