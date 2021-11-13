@@ -218,11 +218,12 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           var cafe_review_pro = result[0].cafe_review_pro;
           if(cafe_review_pro===null) cafe_review_pro ="죄송합니다. 아직 리뷰데이터가 적습니다."
           const scope = result[0].scope;
-          //const photoStr = result[0].photo;
-          //const photo = JSON.parse(photoStr);
+          const photoStr = result[0].photo;
+          let photo;
+          
 
           var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
-
+          
           var body = `        
           <h1>${cafe_name}</h1>
           <p>${cafe_location}</p>
@@ -231,11 +232,19 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           <p>${cafe_review_pro}</p>
           <p>${scope}</p>
           <p>${distance}m</p>
+          <p><img src = "../test1.png" /></p>
           `
-          
+          if(photoStr==undefined);
+          else{ 
+            photo = JSON.parse(photoStr);
+            var i = 0;
+            while(i<photo.length){
+              body += `<input src = ${photo[0].src.replace('image', '..')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
+              i++;
+            }
+          }
           var html = viewCafe.HTML(cafe_id, body);
-          response.send(html);
-          
+          response.end(html);
         }
       });
     }
