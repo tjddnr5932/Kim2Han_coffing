@@ -15,9 +15,10 @@ header {
 
 main {
     font-family: "NotoSerifKR-Bold";
-color: white;
+    background: black;
+    color: white;
     height: 700px;
-    background-image: url("./cafe_register.jpg");
+    /* background-image: url("./cafe_register.jpg"); */
     background-size: 100%;
     background-position: center;
 }
