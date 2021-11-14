@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./myPage.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css' />
+
     <title>Document</title>
     <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
 </head>
@@ -20,7 +22,7 @@
             <tbody>
                 <td align="center" style="width: 33.3%; border-right: 1px solid black;">
                     <div align="left" style="margin-left: 30%;">
-                        I D <input class="inputA" id="my_ID" type="text"  style="margin-left: 24.5px;"><br>
+                        I D <input class="inputA" id="my_ID" type="text" style="margin-left: 24.5px;"><br>
                         Name <input class="inputA" id="my_Name" type="text" value="" style="margin-left: 3px;"><br>
                         Age <input class="inputB" id="my_Age" type="text" value="" style="margin:0px 19px;"> Gender
                         <input class="inputB" id="my_Gender" type="text" value="" style="margin-left: 23px;"><br>
@@ -58,21 +60,161 @@
 
 
                     <h1>My Location</h1> <input class="inputA2" type="text">
-                    <input type="button" class="inputB" class="button" onclick="location.href=''" value="Select Location">
+                    <input type="button" class="inputB" class="button" onclick="location.href=''"
+                        value="Select Location">
                     <div class="map">
-                    <!-- 여기다가 지도 넣어주세요 -->
+                        <!-- 여기다가 지도 넣어주세요 -->
 
                     </div>
 
 
                 </td>
-                <td align="center" style="width:33.3%;"><h1></h1></td>
+                <td align="center" style="width:33.3%;">
+                    <h1>My Review</h1>
+                    <div class="review">
+                        <div class="review_cafeName">카페 이름</div>
+                        <div class="review_cafeFlavor">맛 평가</div>
+                        <div class="review_cafeRating">
+                            <div class='RatingStar1'>
+                                <div class='RatingScore'>
+                                    <div class='outer-star'>
+                                        <div class='inner-star'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                RatingScore1 = ''
+                                 ratings = {
+                                    RatingScore: RatingScore1
+                                }
+                                totalRating = 5;
+                                table = document.querySelector('.RatingStar1');
+
+                                function rateIt() {
+                                    for (rating in ratings) {
+                                        ratingPercentage = ratings[rating] / totalRating * 100;
+                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
+                                        star = table.querySelector(`.${rating} .inner-star`);
+                                        numberRating = table.querySelector(`.${rating} .numberRating`);
+                                        star.style.width = ratingRounded;
+                                        numberRating.innerText = ratings[rating];
+                                    }
+                                }
+                                rateIt()   
+                            </script>
+                        </div>
+                        <div class="review_content">내가 쓴 리뷰 내용</div>
+                    </div>
+                    <div class="review">
+                        <div class="review_cafeName">카페 이름</div>
+                        <div class="review_cafeFlavor">맛 평가</div>
+                        <div class="review_cafeRating">
+                            <div class='RatingStar1'>
+                                <div class='RatingScore'>
+                                    <div class='outer-star'>
+                                        <div class='inner-star'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                RatingScore2 = ''
+                                 ratings = {
+                                    RatingScore: RatingScore1
+                                }
+                                totalRating = 5;
+                                table = document.querySelector('.RatingStar1');
+
+                                function rateIt() {
+                                    for (rating in ratings) {
+                                        ratingPercentage = ratings[rating] / totalRating * 100;
+                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
+                                        star = table.querySelector(`.${rating} .inner-star`);
+                                        numberRating = table.querySelector(`.${rating} .numberRating`);
+                                        star.style.width = ratingRounded;
+                                        numberRating.innerText = ratings[rating];
+                                    }
+                                }
+                                rateIt()   
+                            </script>
+                        </div>
+                        <div class="review_content">내가 쓴 리뷰 내용</div>
+                    </div>
+                    <div class="review">
+                        <div class="review_cafeName">카페 이름</div>
+                        <div class="review_cafeFlavor">맛 평가</div>
+                        <div class="review_cafeRating">
+                            <div class='RatingStar1'>
+                                <div class='RatingScore'>
+                                    <div class='outer-star'>
+                                        <div class='inner-star'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                RatingScore3 = ''
+                                 ratings = {
+                                    RatingScore: RatingScore1
+                                }
+                                totalRating = 5;
+                                table = document.querySelector('.RatingStar1');
+
+                                function rateIt() {
+                                    for (rating in ratings) {
+                                        ratingPercentage = ratings[rating] / totalRating * 100;
+                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
+                                        star = table.querySelector(`.${rating} .inner-star`);
+                                        numberRating = table.querySelector(`.${rating} .numberRating`);
+                                        star.style.width = ratingRounded;
+                                        numberRating.innerText = ratings[rating];
+                                    }
+                                }
+                                rateIt()   
+                            </script>
+                        </div>
+                        <div class="review_content">내가 쓴 리뷰 내용</div>
+                    </div>
+                    <div class="review">
+                        <div class="review_cafeName">카페 이름</div>
+                        <div class="review_cafeFlavor">맛 평가</div>
+                        <div class="review_cafeRating">
+                            <div class='RatingStar1'>
+                                <div class='RatingScore'>
+                                    <div class='outer-star'>
+                                        <div class='inner-star'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                RatingScore4 = ''
+                                 ratings = {
+                                    RatingScore: RatingScore1
+                                }
+                                totalRating = 5;
+                                table = document.querySelector('.RatingStar1');
+
+                                function rateIt() {
+                                    for (rating in ratings) {
+                                        ratingPercentage = ratings[rating] / totalRating * 100;
+                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
+                                        star = table.querySelector(`.${rating} .inner-star`);
+                                        numberRating = table.querySelector(`.${rating} .numberRating`);
+                                        star.style.width = ratingRounded;
+                                        numberRating.innerText = ratings[rating];
+                                    }
+                                }
+                                rateIt()   
+                            </script>
+                        </div>
+                        <div class="review_content">내가 쓴 리뷰 내용</div>
+                    </div>
+                    
+                </td>
             </tbody>
         </table>
 
     </main>
     <footer></footer>
-    <script >
+    <script>
         // 여기다 변수 받아오세요
         var my_ID = '';
         var my_Name = '';
@@ -122,8 +264,6 @@
 
         id_section = document.getElementById("myFlavor_Balance");
         id_section.setAttribute('value', myFlavor_Balance);
-
-
     </script>
 </body>
 
