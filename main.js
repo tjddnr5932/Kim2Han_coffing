@@ -5,7 +5,7 @@ const FileStore = require('session-file-store')(session);
 const confiInfor = require('./dev/cofiInfor');
 const app = express();
 
-app.use(express.static('image'));
+app.use(express.static('public'));
 
 app.use(express.urlencoded({extended : false}));
 app.use(compression());

@@ -40,20 +40,41 @@ router.get('/', function(request, response, next){
         }
         else{
             if(request.user===undefined) {
-                return response.redirect('/');
+                response.redirect('/');
             }
             else{
                 var title = "MyPage";
                 var list = ["위치 설정", "자격증 인증", "맛 설정", "방문한 카페"];
-                if(list.length === filelist.length){
-                    var flist = MyPage.list(filelist, list);
-                    var html = MyPage.HTML(title, flist);
-                    response.send(html);
-                }
-                else{
-                    console.log("마이페이지 리스트의 개수가 갖지 않습니다.");
-                    response.send("서버에 오류가 발생했습니다.");
-                }
+                db.query(`SELECT * FROM user WHERE id = "${request.user.id}"`, function(error, result){
+                  if(error){
+                    console.log(error);
+                  }
+                  else{
+                    const name = result[0].name;
+                    const age = result[0].age;
+                    const gender = result[0].gender;
+                    const phone = result[0].phone;
+                    const birth = result[0].birth;
+                    const location = result[0].location;
+                    const taste = result[0].taste;
+                    const tasteArr = taste.split("/");
+                    const latitude = result[0].latitude;
+                    const longitude = result[0].longitude;
+                    const lat = parseFloat(latitude);
+                    const lon = parseFloat(longitude);
+
+                    if(list.length === filelist.length){
+                      var flist = MyPage.list(filelist, list);
+                      var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, birth, location,
+                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, flist);
+                      response.send(html);
+                    }
+                    else{
+                        console.log("마이페이지 리스트의 개수가 갖지 않습니다.");
+                        response.send("서버에 오류가 발생했습니다.");
+                    }
+                  }
+                });
             }
         }
     });
@@ -232,14 +253,14 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           <p>${cafe_review_pro}</p>
           <p>${scope}</p>
           <p>${distance}m</p>
-          <p><img src = "../test1.png" /></p>
+          <p><img src = "../image/test1.png" /></p>
           `
           if(photoStr==undefined);
           else{ 
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
-              body += `<input src = ${photo[0].src.replace('image', '..')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
+              body += `<input src = ${photo[0].src.replace('public', '..')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
               i++;
             }
           }

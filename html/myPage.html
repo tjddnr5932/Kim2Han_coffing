@@ -82,26 +82,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                RatingScore1 = ''
-                                 ratings = {
-                                    RatingScore: RatingScore1
-                                }
-                                totalRating = 5;
-                                table = document.querySelector('.RatingStar1');
 
-                                function rateIt() {
-                                    for (rating in ratings) {
-                                        ratingPercentage = ratings[rating] / totalRating * 100;
-                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
-                                        star = table.querySelector(`.${rating} .inner-star`);
-                                        numberRating = table.querySelector(`.${rating} .numberRating`);
-                                        star.style.width = ratingRounded;
-                                        numberRating.innerText = ratings[rating];
-                                    }
-                                }
-                                rateIt()   
-                            </script>
                         </div>
                         <div class="review_content">내가 쓴 리뷰 내용</div>
                     </div>
@@ -116,26 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                RatingScore2 = ''
-                                 ratings = {
-                                    RatingScore: RatingScore1
-                                }
-                                totalRating = 5;
-                                table = document.querySelector('.RatingStar1');
 
-                                function rateIt() {
-                                    for (rating in ratings) {
-                                        ratingPercentage = ratings[rating] / totalRating * 100;
-                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
-                                        star = table.querySelector(`.${rating} .inner-star`);
-                                        numberRating = table.querySelector(`.${rating} .numberRating`);
-                                        star.style.width = ratingRounded;
-                                        numberRating.innerText = ratings[rating];
-                                    }
-                                }
-                                rateIt()   
-                            </script>
                         </div>
                         <div class="review_content">내가 쓴 리뷰 내용</div>
                     </div>
@@ -214,57 +176,6 @@
 
     </main>
     <footer></footer>
-    <script>
-        // 여기다 변수 받아오세요
-        var my_ID = '';
-        var my_Name = '';
-        var my_Age = '';
-        var my_Gender = '';
-        var my_Email = '';
-        var my_Phone = '';
-        var my_Birth = '';
-        var myFlavor_Body = '';
-        var myFlavor_Acidity = '';
-        var myFlavor_Sweet = '';
-        var myFlavor_Bitterness = '';
-        var myFlavor_Balance = '';
-
-        let id_section = document.getElementById("my_ID");
-        id_section.setAttribute('value', my_ID);
-
-        id_section = document.getElementById("my_Name");
-        id_section.setAttribute('value', my_Name);
-
-        id_section = document.getElementById("my_Age");
-        id_section.setAttribute('value', my_Age);
-
-        id_section = document.getElementById("my_Gender");
-        id_section.setAttribute('value', my_Gender);
-
-        id_section = document.getElementById("my_Email");
-        id_section.setAttribute('value', my_Email);
-
-        id_section = document.getElementById("my_Phone");
-        id_section.setAttribute('value', my_Phone);
-
-        id_section = document.getElementById("my_Birth");
-        id_section.setAttribute('value', my_Birth);
-
-        id_section = document.getElementById("myFlavor_Body");
-        id_section.setAttribute('value', myFlavor_Body);
-
-        id_section = document.getElementById("myFlavor_Acidity");
-        id_section.setAttribute('value', myFlavor_Acidity);
-
-        id_section = document.getElementById("myFlavor_Sweet");
-        id_section.setAttribute('value', myFlavor_Sweet);
-
-        id_section = document.getElementById("myFlavor_Bitterness");
-        id_section.setAttribute('value', myFlavor_Bitterness);
-
-        id_section = document.getElementById("myFlavor_Balance");
-        id_section.setAttribute('value', myFlavor_Balance);
-    </script>
 </body>
 
 </html>

@@ -1,0 +1,58 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+/*@font-face {
+    font-family: "NotoSerifKR-Bold";
+    src: url("./NotoSerifKR-Bold.otf");
+}*/
+
+header {
+    height: 100px;
+}
+
+main {
+    font-family: "NotoSerifKR-Bold";
+    background: black;
+    color: white;
+    height: 700px;
+    /* background-image: url("./cafe_register.jpg"); */
+    background-size: 100%;
+    background-position: center;
+}
+
+table{
+    width: 100%;
+}
+td{
+    align-items: center;
+}
+
+
+.inputA {
+    width: 300px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+.inputB {
+    width: 96px;
+    height:42px;
+    margin: 8px 0;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+
+footer {
+color: white;
+}
