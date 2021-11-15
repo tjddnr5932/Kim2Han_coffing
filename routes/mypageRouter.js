@@ -62,6 +62,7 @@ router.get('/', function(request, response, next){
                     const longitude = result[0].longitude;
                     const lat = parseFloat(latitude);
                     const lon = parseFloat(longitude);
+                    
 
                     if(list.length === filelist.length){
                       var flist = MyPage.list(filelist, list);
@@ -70,7 +71,7 @@ router.get('/', function(request, response, next){
                       response.send(html);
                     }
                     else{
-                        console.log("마이페이지 리스트의 개수가 갖지 않습니다.");
+                        console.log("마이페이지 리스트의 개수가 같지 않습니다.");
                         response.send("서버에 오류가 발생했습니다.");
                     }
                   }
@@ -221,6 +222,7 @@ router.post('/comment_pro', function(request, response){ //전문가 댓글 보�
 router.post('/view_cafe', function(request,response){ //카페 정보 보기
   const post = request.body;
   const cafe_id = post.cafe_id;
+
   db.query(`SELECT * FROM cafe WHERE cafe_id = "${cafe_id}"`, function(error, result){
     if(error){
       console.log(error);
@@ -244,7 +246,6 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           
 
           var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
-          
           var body = `        
           <h1>${cafe_name}</h1>
           <p>${cafe_location}</p>
@@ -265,7 +266,7 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
             }
           }
           var html = viewCafe.HTML(cafe_id, body);
-          response.end(html);
+          response.send(html);
         }
       });
     }
@@ -421,28 +422,36 @@ router.post('/:pageId', function(request, response, next){
                     db.query(`SELECT cafe_name, cafe_id FROM cafe WHERE cafe_id = "${visited_list[i].cafe_id}"`, function(err, res){ //index번째 방문기록의 cafe_id와 일치하는 튜풀들의 cafe_name을 res에 받아온다.
                       if(visited_list[j].review){ //review를 썻을 때, 모든 사용자들의 리뷰보기 가능
                         response.write(`
-                        <div>
-                        ${res[0].cafe_name}
+                        <div align="center">
+                        <table>
+                        <tr>
+                        <td><h3>${res[0].cafe_name}</h3></td>
                         <form action="view_cafe" method="post">
                         <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
-                        <input type="submit" value="카페 정보">
+                        <td><input class="inputB" type="submit" value="카페 정보"><td>
                         </form>
+                        </tr>
+                        </table>
                         </div>
                         `);
                         j++;
                       }
                       else{ //review를 안 썻을 때, 리뷰 쓰기 가능
                         response.write(`
-                        <div>
-                        ${res[0].cafe_name}
+                        <div align="center">
+                        <table>
+                        <tr>
+                        <td><h3>${res[0].cafe_name}</h3></td>
                         <form action="view_cafe" method="post">
                         <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
-                        <input type="submit" value="카페 정보">
+                        <td><input class="inputB" type="submit" value="카페 정보"><td>
                         </form>             
                         <form action="write_review" method="post">
                         <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
-                        <input type="submit" value="리뷰 쓰기">
+                        <td><input class="inputB" type="submit" value="리뷰 쓰기"><td>
                         </form>
+                        </tr>
+                        </table>
                         </div>
                         `);
                         j++;
@@ -454,6 +463,7 @@ router.post('/:pageId', function(request, response, next){
                 }
               });
               var html = visitedList.HTML(sanitizeTitle);
+              console.log(html);
               response.write(html);
             }
         }
