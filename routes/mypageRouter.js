@@ -53,23 +53,52 @@ router.get('/', function(request, response, next){
                     const name = result[0].name;
                     const age = result[0].age;
                     const gender = result[0].gender;
-                    const phone = result[0].phone;
+                    const phone = result[0].phoneNum;
                     const birth = result[0].birth;
                     const location = result[0].location;
+                    const pro = result[0].pro;
                     const taste = result[0].taste;
-                    const tasteArr = taste.split("/");
                     const latitude = result[0].latitude;
                     const longitude = result[0].longitude;
-                    const lat = parseFloat(latitude);
-                    const lon = parseFloat(longitude);
+                    let tasteArr;
+                    let lat;
+                    let lon;
+                    let loc;
+                             
+                    if(taste===null){
+                      tasteArr=[0,0,0,0,0];
+                    }
+                    else{
+                      tasteArr = taste.split("/");
+                    }
+
+                    if(latitude===null||longitude===null){
+                      lat = 36.629282
+                      lon = 127.456551
+                    }
+                    else{
+                      lat = parseFloat(latitude);
+                      lon = parseFloat(longitude);
+                    }
+
+                    if(location===null){
+                      loc="아직 위치가 설정되지 않았습니다."
+                    }
+                    else{
+                      const temp = location.split(",");
+                      temp.pop();
+                      temp.pop();
+                      loc=temp.reverse().join(" ");
+                    }
                     
 
                     if(list.length === filelist.length){
                       var flist = MyPage.list(filelist, list);
-                      var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, birth, location,
-                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, flist);
+                      var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, birth, loc,
+                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, pro, flist);
                       response.send(html);
                     }
+
                     else{
                         console.log("마이페이지 리스트의 개수가 같지 않습니다.");
                         response.send("서버에 오류가 발생했습니다.");
@@ -185,36 +214,31 @@ router.post('/visit_cafe', function(request, response){  // 아직 미구현된 
 });
 
 
-router.post('/comment_public', function(request, response){ //일반인 댓글 보기
-  const post = request.body;
-  const cafe_id = post.cafe_id;
+router.post('/comment_public/:cafe_id', function(request, response){ //일반인 댓글 보기
+  const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_public WHERE cafe_id = "${cafe_id}"`, function(error, result){
-    var body = "<h1>일반인 댓글 보기<h1>";
+    var body = "<h1 align='center'>일반인 댓글 보기<h1>";
     var i = 0;
     while(i<result.length){
-      body+=`<p>${result[i].comment}</p></br>`;
+      if(result[i].comment!=null&&result[i].comment!='')body+=`<p align='center'>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
-    var html = viewCafe.HTML(cafe_id, body);
-    response.send(html);
+    response.send(body);
   });
 });
 
 
-router.post('/comment_pro', function(request, response){ //전문가 댓글 보기
-  const post = request.body;
-  const cafe_id = post.cafe_id;
+router.post('/comment_pro/:cafe_id', function(request, response){ //전문가 댓글 보기
+  const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_pro WHERE cafe_id = "${cafe_id}"`, function(error, result){
-    var body = "<h1>전문가 댓글 보기<h1>";
+    var body = "<h1 align='center'>전문가 댓글 보기<h1>";
     var i = 0;
-    var count = 0;
+    console.log(result.length);
     while(i<result.length){
-      if(result[i].comment!==""||result[i].comment==null);
-      else body+=`<p>${result[i].comment}</p></br>`;
+      if(result[i].comment!=null&&result[i].comment!='')body+=`<p align='center'>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
-    var html = viewCafe.HTML(cafe_id, body);
-    response.send(html);
+    response.send(body);
   });
 });
 
@@ -248,7 +272,7 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
           var body = `      
           <td align="center" style="width: 33.3%; border-right: 1px solid black;">
-          <div align="left" style="margin-left: 38%;">
+          <div align="left" style="margin-left: 39%;">
             <h1 style="margin-top: 80px;">${cafe_name}</h1>
             원두 <input class="inputA" id="my_ID" type="text" readonly value= "${cafe_bean}" style="margin-left: 24.5px;"><br>
             위치 <input class="inputA" id="my_Birth" type="text" readonly value="${cafe_location}" style="margin-left: 24.5px;"><br>
@@ -256,7 +280,6 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
             일반인 <input class="inputB" id="my_Name" type="text" readonly value="${cafe_review_public}" style="margin-left: 7px; margin-right: 20px;">
             전문가 <input class="inputB" id="my_Age" type="text" readonly value="${cafe_review_pro}" style="margin:0px 7px;"><br>
             별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24.5px;"><br>
-            <p><img src = "../image/test1.png" /></p>
           </div>
           </td>
           `
@@ -418,57 +441,77 @@ router.post('/:pageId', function(request, response, next){
                   console.log(error);
                 }
                 else{
-                  var visited_list = JSON.parse(result[0].visited); // visited 데이터를 string에서 JSON형태로 변환
-
-                  var i = 0;
-                  var j = 0;
-                  while(i<visited_list.length){    //방문한 카페의 갯수만큼 반복한다.
-                    db.query(`SELECT cafe_name, cafe_id FROM cafe WHERE cafe_id = "${visited_list[i].cafe_id}"`, function(err, res){ //index번째 방문기록의 cafe_id와 일치하는 튜풀들의 cafe_name을 res에 받아온다.
-                      if(visited_list[j].review){ //review를 썻을 때, 모든 사용자들의 리뷰보기 가능
-                        response.write(`
-                        <div align="center">
-                        <table>
-                        <tr>
-                        <td><h3>${res[0].cafe_name}</h3></td>
-                        <form action="view_cafe" method="post">
-                        <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
-                        <td><input class="inputB" type="submit" value="카페 정보"><td>
-                        </form>
-                        </tr>
-                        </table>
-                        </div>
-                        `);
-                        j++;
-                      }
-                      else{ //review를 안 썻을 때, 리뷰 쓰기 가능
-                        response.write(`
-                        <div align="center">
-                        <table>
-                        <tr>
-                        <td><h3>${res[0].cafe_name}</h3></td>
-                        <form action="view_cafe" method="post">
-                        <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
-                        <td><input class="inputB" type="submit" value="카페 정보"><td>
-                        </form>             
-                        <form action="write_review" method="post">
-                        <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
-                        <td><input class="inputB" type="submit" value="리뷰 쓰기"><td>
-                        </form>
-                        </tr>
-                        </table>
-                        </div>
-                        `);
-                        j++;
-                      }
-                    });
-                    i++;
+                  if(result[0].visited===null){
+                    response.write(`
+                    <!doctype html>
+                    <html>
+                    <head>
+                    <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link rel="stylesheet" href="../css/tasteSetting.css">
+                    <title>CoffingProject - ${title}</title>
+                    </head>
+                    <body>
+                    <h1 align="center" style="margin-top:200px">방문한 카페 목록</h1>
+                    <h3 align="center">방문 기록이 없습니다.</h3>
+                    </body>
+                    </html>
+                    `);
+                    response.end();
                   }
+                  else{
+                    var html = visitedList.HTML(sanitizeTitle);
+                    response.write(html);
+                    var visited_list = JSON.parse(result[0].visited); // visited 데이터를 string에서 JSON형태로 변환
+
+                    var i = 0;
+                    var j = 0;
+                    while(i<visited_list.length){    //방문한 카페의 갯수만큼 반복한다.
+                      db.query(`SELECT cafe_name, cafe_id FROM cafe WHERE cafe_id = "${visited_list[i].cafe_id}"`, function(err, res){ //index번째 방문기록의 cafe_id와 일치하는 튜풀들의 cafe_name을 res에 받아온다.
+                        if(visited_list[j].review){ //review를 썻을 때, 모든 사용자들의 리뷰보기 가능
+                          response.write(`
+                          <div align="center">
+                          <table>
+                          <tr>
+                          <td><h3>${res[0].cafe_name}</h3></td>
+                          <form action="view_cafe" method="post">
+                          <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
+                          <td><input class="inputB" type="submit" value="카페 정보"><td>
+                          </form>
+                          </tr>
+                          </table>
+                          </div>
+                          `);
+                          j++;
+                        }
+                        else{ //review를 안 썻을 때, 리뷰 쓰기 가능
+                          response.write(`
+                          <div align="center">
+                          <table>
+                          <tr>
+                          <td><h3>${res[0].cafe_name}</h3></td>
+                          <form action="view_cafe" method="post">
+                          <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
+                          <td><input class="inputB" type="submit" value="카페 정보"><td>
+                          </form>             
+                          <form action="write_review" method="post">
+                          <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
+                          <td><input class="inputB" type="submit" value="리뷰 쓰기"><td>
+                          </form>
+                          </tr>
+                          </table>
+                          </div>
+                          `);
+                          j++;
+                        }
+                      });
+                      i++;
+                    }
                   response.end();
+                  }
                 }
               });
-              var html = visitedList.HTML(sanitizeTitle);
-              console.log(html);
-              response.write(html);
             }
         }
     });
