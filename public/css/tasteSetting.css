@@ -33,6 +33,7 @@ td{
 
 
 .inputA {
+    text-align: center;
     width: 300px;
     padding: 12px 20px;
     margin: 8px 0;
@@ -43,6 +44,7 @@ td{
 }
 
 .inputB {
+    text-align: center;
     width: 96px;
     height:30px;
     margin: 8px 0;

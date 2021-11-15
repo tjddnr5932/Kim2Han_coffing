@@ -237,24 +237,28 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           const cafe_location = result[0].cafe_location;
           const cafe_bean = result[0].cafe_bean;
           var cafe_review_public = result[0].cafe_review_public;
-          if(cafe_review_public===null) cafe_review_public ="죄송합니다. 아직 리뷰데이터가 적습니다."
+          if(cafe_review_public===null) cafe_review_public ="준비중!"
           var cafe_review_pro = result[0].cafe_review_pro;
-          if(cafe_review_pro===null) cafe_review_pro ="죄송합니다. 아직 리뷰데이터가 적습니다."
+          if(cafe_review_pro===null) cafe_review_pro ="준비중!"
           const scope = result[0].scope;
           const photoStr = result[0].photo;
           let photo;
           
 
           var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
-          var body = `        
-          <h1>${cafe_name}</h1>
-          <p>${cafe_location}</p>
-          <p>${cafe_bean}</p>
-          <p>${cafe_review_public}</p>
-          <p>${cafe_review_pro}</p>
-          <p>${scope}</p>
-          <p>${distance}m</p>
-          <p><img src = "../image/test1.png" /></p>
+          var body = `      
+          <td align="center" style="width: 33.3%; border-right: 1px solid black;">
+          <div align="left" style="margin-left: 38%;">
+            <h1 style="margin-top: 80px;">${cafe_name}</h1>
+            원두 <input class="inputA" id="my_ID" type="text" readonly value= "${cafe_bean}" style="margin-left: 24.5px;"><br>
+            위치 <input class="inputA" id="my_Birth" type="text" readonly value="${cafe_location}" style="margin-left: 24.5px;"><br>
+            거리 <input class="inputA" id="my_Location" type="text" readonly value="${distance}" style="margin-left: 24.5px;"><br>
+            일반인 <input class="inputB" id="my_Name" type="text" readonly value="${cafe_review_public}" style="margin-left: 7px; margin-right: 20px;">
+            전문가 <input class="inputB" id="my_Age" type="text" readonly value="${cafe_review_pro}" style="margin:0px 7px;"><br>
+            별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24.5px;"><br>
+            <p><img src = "../image/test1.png" /></p>
+          </div>
+          </td>
           `
           if(photoStr==undefined);
           else{ 
