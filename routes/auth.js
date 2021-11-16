@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const loginPage = require('../lib/loginPage');
 const registerPage = require('../lib/registerPage');
-
+const path = require('path');
 const mysql = require('mysql');
 
 const confiInfor = require('../dev/cofiInfor');
@@ -36,6 +36,34 @@ module.exports = function(passport){
         response.send(html);
     });
 
+    router.post('/idCheck/:ID', function(request, response, next){
+        var id = path.parse(request.params.ID).base;
+        db.query(`SELECT id from user WHERE id = "${id}"`, function (error, result){
+            if(error){
+                console.log(error);
+            }
+            else{
+                if(result.length==0){
+                    response.send('사용 가능한 ID입니다');
+                }
+                else{
+                    response.send(id + '는 현재 존재하는 아이디 입니다.');
+                }
+            }
+        });
+    });
+
+    router.post('/pwCheck/:PW/:PW2', function(request, response, next){
+        var pw = path.parse(request.params.PW).base;
+        var pw2 = path.parse(request.params.PW2).base;
+        if(pw===pw2){
+            response.send('비밀번호가 일치합니다.');
+        }
+        else{
+            response.send('비밀번호가 일치하지 않습니다.');
+        }
+    });
+
     router.post('/register_process', function(request, response){
             var post = request.body;
             var id = post.id;
@@ -45,18 +73,18 @@ module.exports = function(passport){
             var phoneNum = post.phoneNum;
             var gender = post.gender;
             var age = post.age;
-            var birth = post.birth;
-            db.query('SELECT id from user', function (error, result, fields){
+            var birth_year = post.birth_year;
+            var birth_month = post.birth_month;
+            var birth_day = post.birth_day;
+            console.log(birth_day);
+            var birth = new Date(birth_year, birth_month-1, birth_day, 9).toISOString().substring(0,10);
+            db.query(`SELECT id from user WHERE id = "${id}"`, function (error, result){
                 if(error){
                     console.log(error);
                 }
                 else{
-                    var i = 0;
-                    while(i<result.length){
-                        if(id===result[i].id){
-                            response.redirect('/auth/register');
-                        }
-                        i++;
+                    if(result.length!=0){
+                        response.redirect('/auth/register');
                     }
                 }
             });

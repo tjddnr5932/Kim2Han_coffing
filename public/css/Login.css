@@ -17,7 +17,7 @@ main {
     font-family: "NotoSerifKR-Bold";
     height: 800px;
     width: auto;
-    background-image: url("./cafe4.jpg");
+    background-image: url("../image/view_cafe.jpg");
     background-size: 100%;
     /* background-position: center; */
 }
