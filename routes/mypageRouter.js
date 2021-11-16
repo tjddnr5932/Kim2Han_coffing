@@ -439,8 +439,22 @@ router.post('/:pageId', function(request, response, next){
                 response.send(html);
             }
             else if(title === "proof"){
-              var html = proofSetting.HTML(sanitizeTitle);
-              response.send(html);
+              db.query(`SELECT id FROM proof_data WHERE id = "${request.user.id}"`, function(err, result){
+                if(err){
+                  console.log(err);
+                }
+                else{
+                  if(result[0]===undefined){
+                    var html = proofSetting.HTML("사진 업로드");
+                    response.send(html);
+                  }
+                  else{
+                    var html = proofSetting.HTML("사진 재업로드: 심사 중인 사진이 있습니다.");
+                    console.log(html);
+                    response.send(html);
+                  }
+                }
+              });
             }
             else if(title === "visitedList"){
               db.query(`SELECT visited FROM user WHERE id = "${request.user.id}"`, function(error, result){ //user테이블에 사용자 id가 일치하는 튜플의 visited 데이터를 result에 받아온다.
