@@ -189,28 +189,37 @@ router.post('/location_process', function(request, response){
     response.end();
 });
 
-router.post('/visit_cafe', function(request, response){  // 아직 미구현된 카페 방문하기 기능
+router.post('/visit_cafe', function(request, response){  // 방문한 카페 등록하기
   var post = request.body;
   let today = new Date();
   today += 540;
-  console.log('cafe_id: ', post.cafe_id);
-  test = [{
-    cafe_id:"0",
-    date: today,
-    review:true
-  }];
 
-  test.push({
-    cafe_id:"1",
-    date: today,
-    review:false
+  db.query(`SELECT visited FROM user WHERE id = "${request.user.id}"`, function(error, result){
+    if(error){
+      console.log(error);
+    }
+    else{
+      if(result[0].visited===null){
+        const temp =[{
+          cafe_id: post.cafe_id,
+          review: false,
+          date: today
+        }];
+        const visited = JSON.stringify(temp);
+        db.query(`UPDATE user SET visited = "${visited}" WHERE id = "${request.user.id}"`);
+      }
+      else{
+        let temp = JSON.parse(result[0].visited);
+        temp.push({
+          cafe_id: post.cafe_id,
+          review: false,
+          date: today
+        });
+        const visited = JSON.stringify(temp);
+        db.query(`UPDATE user SET visited = "${visited}" WHERE id = "${request.user.id}"`);
+      }
+    }
   });
-
-  console.log(test);
-  var testStr = JSON.stringify(test);
-
-  db.query(`UPDATE user SET visited = '${testStr}' WHERE id = "${request.user.id}"`);
-  console.log(`UPDATE user SET visited = '${testStr}' WHERE id = "${request.user.id}"`);
 });
 
 
@@ -327,14 +336,12 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
           else{
             db.query(`SELECT review_num FROM review_pro WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
               if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 전문가 리뷰 테이블에 저장
-                console.log(`INSERT INTO review_pro(review_num, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment]);
                 db.query(`INSERT INTO review_pro(review_num, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].tatal, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment]);
                 db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
                   if(er){
                     console.log(er);
                   }
                   else{
-                    console.log(visit[0].visited);
                     var visited = JSON.parse(visit[0].visited);
                     var i = 0;
                     while(i<visited.length){
