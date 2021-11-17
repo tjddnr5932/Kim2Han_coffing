@@ -11,6 +11,7 @@ const proofSetting = require('../lib/mypages/proof.js');
 const visitedList = require('../lib/mypages/visitedList.js');
 const writeReview = require('../lib/writeReview.js');
 const viewCafe = require('../lib/viewCafe.js');
+const recommendMap = require('../lib/recommendMap.js');
 const mysql = require('mysql');
 const multer = require('multer');
 
@@ -91,10 +92,11 @@ router.get('/', function(request, response, next){
                       loc=temp.reverse().join(" ");
                     }
                     
+                    let yyyymmdd = new Date(birth.getFullYear(), birth.getMonth(), birth.getDate(), 9).toISOString().substring(0,10);
 
                     if(list.length === filelist.length){
                       var flist = MyPage.list(filelist, list);
-                      var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, birth, loc,
+                      var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, yyyymmdd, loc,
                         tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, pro, flist);
                       response.send(html);
                     }
@@ -140,10 +142,10 @@ router.post('/upload_process',upload.single("name"),function(req,res){
 
 router.post('/taste_process', function(request, response){
     var post = request.body;
-    var taste = post.body+ "/" + post.sweet + "/" + post.acidity + "/" + post.btterness + "/" + post.balance
     var id = request.user.id;
-    db.query('UPDATE user SET taste = ' + '"' + taste + '"' + ' WHERE id = ' + '"' + id + '"');
-    console.log('UPDATE user SET taste = ' + '"' + taste + '"' + ' WHERE id = ' + '"' + id + '"');
+    const taste = post.body+"/"+post.sweet+"/"+post.acidity+"/"+post.bitterness+"/"+post.balance;
+    console.log(`UPDATE user SET taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
+    db.query(`UPDATE user SET taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
     response.writeHead(302, {Location : '/mypage'});
     response.end();
 });
@@ -157,8 +159,10 @@ router.post('/mlocation_process', function(request, response){
     geocoder.reverse({lat:parseFloat(_lat), lon:parseFloat(_lng)})
     .then((res)=> {
         loc = res[0].formattedAddress;
-        db.query(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
-        console.log(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        const temp = loc.split(",");
+        const tmp = temp.reverse();
+        const city = tmp[3];
+        db.query(`UPDATE user SET city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
     })
     .catch((err)=> {
         console.log(err);
@@ -170,17 +174,27 @@ router.post('/mlocation_process', function(request, response){
 
 router.post('/location_process', function(request, response){
     var post = request.body;
-    var loc = post.loc;
+    var _loc = post.loc;
     var _lat;
     var _lng;
 
-    geocoder.geocode(loc)
-    .then((res)=> {
-        _lat = res[0].latitude;
-        _lng = res[0].longitude;
-        db.query(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
-        console.log(`UPDATE user SET location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+    geocoder.geocode(_loc)
+    .then((result)=> {
+        _lat = result[0].latitude;
+        _lng = result[0].longitude;
+        geocoder.reverse({lat:_lat, lon:_lng})
+        .then((res)=> {
+            const loc = res[0].formattedAddress;
+            const temp = loc.split(",");
+            const tmp = temp.reverse();
+            const city = tmp[3];
+            db.query(`UPDATE user SET city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        })
+        .catch((err)=> {
+            console.log(err);
+        });
     })
+    
     .catch((err)=> {
     console.log(err);
     });
@@ -192,8 +206,7 @@ router.post('/location_process', function(request, response){
 router.post('/visit_cafe', function(request, response){  // 방문한 카페 등록하기
   var post = request.body;
   let today = new Date();
-  today += 540;
-
+  let yyyymmdd = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9).toISOString().substring(0,10);
   db.query(`SELECT visited FROM user WHERE id = "${request.user.id}"`, function(error, result){
     if(error){
       console.log(error);
@@ -203,23 +216,78 @@ router.post('/visit_cafe', function(request, response){  // 방문한 카페 등
         const temp =[{
           cafe_id: post.cafe_id,
           review: false,
-          date: today
+          date: yyyymmdd
         }];
         const visited = JSON.stringify(temp);
-        db.query(`UPDATE user SET visited = "${visited}" WHERE id = "${request.user.id}"`);
+        db.query(`UPDATE user SET visited = '${visited}' WHERE id = "${request.user.id}"`);
+        response.redirect('/');
       }
       else{
         let temp = JSON.parse(result[0].visited);
-        temp.push({
-          cafe_id: post.cafe_id,
-          review: false,
-          date: today
-        });
-        const visited = JSON.stringify(temp);
-        db.query(`UPDATE user SET visited = "${visited}" WHERE id = "${request.user.id}"`);
+        var i = 0;
+        var check = true;
+        while(i<temp.length){
+          if(temp[i].cafe_id===post.cafe_id) {
+            check=false;
+          }
+          i++;
+        }
+        if(check){
+          temp.push({
+            cafe_id: post.cafe_id,
+            review: false,
+            date: yyyymmdd
+          });
+          const visited = JSON.stringify(temp);
+          db.query(`UPDATE user SET visited = '${visited}' WHERE id = "${request.user.id}"`);
+        }
+        response.redirect('/');
       }
     }
   });
+});
+
+router.get('/test', function(request, response){
+  var cafe = [
+      {
+          cafe_id: "0",
+          cafe_name: '성욱카페', 
+          cafe_location: "충북대 후문",
+          cafe_latitude: 33.450701,
+          cafe_longitude: 126.570667,
+          cafe_bean:"원두 좋아",
+          scope:null
+      },
+      {
+          cafe_id: "1",
+          cafe_name: '봉주카페', 
+          cafe_location: "충북대 정문",
+          cafe_latitude: 33.451701,
+          cafe_longitude: 126.571667,
+          cafe_bean:"원두 좋아",
+          scope:4
+      },
+      {
+          cafe_id: "1",
+          cafe_name: '정래카페', 
+          cafe_location: "충북대 서문",
+          cafe_latitude: 33.452701,
+          cafe_longitude: 126.572667,
+          cafe_bean:"원두 좋아",
+          scope:5
+      },
+      {
+          cafe_id: "0",
+          cafe_name: '청주카페', 
+          cafe_location: "청주 어딘가",
+          cafe_latitude: 33.453701,
+          cafe_longitude: 126.573667,
+          cafe_bean:"좋은 원두",
+          scope:4
+      }
+  ];
+  var html = recommendMap.HTML(cafe, 33.463701, 126.574667); //사용자 lat, lon넣기
+  response.send(html);
 });
 
 
@@ -252,7 +320,8 @@ router.post('/comment_pro/:cafe_id', function(request, response){ //전문가 �
 });
 
 
-router.post('/view_cafe', function(request,response){ //카페 정보 보기
+router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 보기
+  var filterId = path.parse(request.params.pageId).base;
   const post = request.body;
   const cafe_id = post.cafe_id;
 
@@ -278,20 +347,34 @@ router.post('/view_cafe', function(request,response){ //카페 정보 보기
           let photo;
           
 
-          var distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
+          const distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
           var body = `      
           <td align="center" style="width: 33.3%; border-right: 1px solid black;">
           <div align="left" style="margin-left: 39%;">
             <h1 style="margin-top: 80px;">${cafe_name}</h1>
             원두 <input class="inputA" id="my_ID" type="text" readonly value= "${cafe_bean}" style="margin-left: 24.5px;"><br>
             위치 <input class="inputA" id="my_Birth" type="text" readonly value="${cafe_location}" style="margin-left: 24.5px;"><br>
-            거리 <input class="inputA" id="my_Location" type="text" readonly value="${distance}" style="margin-left: 24.5px;"><br>
+            거리 <input class="inputA" id="my_Location" type="text" readonly value="${distance}m" style="margin-left: 24.5px;"><br>
+            <p>일반인 전문가 평가는 바디/당도/산미/쓴맛/밸런스 순입니다.</p>
             일반인 <input class="inputB" id="my_Name" type="text" readonly value="${cafe_review_public}" style="margin-left: 7px; margin-right: 20px;">
-            전문가 <input class="inputB" id="my_Age" type="text" readonly value="${cafe_review_pro}" style="margin:0px 7px;"><br>
+            전문가 <input class="inputB" id="my_Age" type="text" readonly value="${cafe_review_pro}" style="margin:0px 7px;"><br> `
+          if(filterId==='recommend'){
+            console.log(filterId);
+            body+=`
+            별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24px; margin-right: 19.5px;">
+            추천맵 <input class="inputB" id="my_Age" type="button" onClick="history.go(-1);" value="돌아가기" style="margin:0px 7px;"><br>
+            </form>
+            </div>
+            </td>`;
+          }
+          else{
+            console.log(filterId);
+            body+=`
             별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24.5px;"><br>
-          </div>
-          </td>
-          `
+            </div>
+            </td>`;
+          }
+
           if(photoStr==undefined);
           else{ 
             photo = JSON.parse(photoStr);
@@ -322,7 +405,7 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
       var body = post.body;
       var sweet = post.sweet;
       var acidity = post.acidity;
-      var btterness = post.btterness;
+      var bitterness = post.bitterness;
       var balance = post.balance;
       var scope = post.scope;
       var comment = post.comment;
@@ -336,7 +419,7 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
           else{
             db.query(`SELECT review_num FROM review_pro WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
               if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 전문가 리뷰 테이블에 저장
-                db.query(`INSERT INTO review_pro(review_num, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].tatal, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment]);
+                db.query(`INSERT INTO review_pro(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].tatal, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
                 db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
                   if(er){
                     console.log(er);
@@ -371,8 +454,8 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
           else{
             db.query(`SELECT review_num FROM review_public WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
               if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 일반인 리뷰 테이블에 저장
-                console.log(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment]);
-                db.query(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, btterness, balance, scope, comment]);
+                console.log(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
+                db.query(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
                 db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
                   if(er){
                     console.log(er);
@@ -496,7 +579,7 @@ router.post('/:pageId', function(request, response, next){
                           <table>
                           <tr>
                           <td><h3>${res[0].cafe_name}</h3></td>
-                          <form action="view_cafe" method="post">
+                          <form action="view_cafe/normal" method="post">
                           <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                           <td><input class="inputB" type="submit" value="카페 정보"><td>
                           </form>
@@ -512,7 +595,7 @@ router.post('/:pageId', function(request, response, next){
                           <table>
                           <tr>
                           <td><h3>${res[0].cafe_name}</h3></td>
-                          <form action="view_cafe" method="post">
+                          <form action="view_cafe/normal" method="post">
                           <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                           <td><input class="inputB" type="submit" value="카페 정보"><td>
                           </form>             

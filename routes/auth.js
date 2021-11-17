@@ -76,7 +76,6 @@ module.exports = function(passport){
             var birth_year = post.birth_year;
             var birth_month = post.birth_month;
             var birth_day = post.birth_day;
-            console.log(birth_day);
             var birth = new Date(birth_year, birth_month-1, birth_day, 9).toISOString().substring(0,10);
             db.query(`SELECT id from user WHERE id = "${id}"`, function (error, result){
                 if(error){
