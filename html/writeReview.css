@@ -1,0 +1,86 @@
+
+@font-face {
+    font-family: "NotoSerifKR-Bold";
+    src: url("./NotoSerifKR-Bold.otf");
+}
+
+body{
+    font-family: "NotoSerifKR-Bold";
+
+}
+
+h1 input{
+    border: hidden;
+    font-size: larger;
+    display: inline;
+    width: 200px;
+    pointer-events: none;
+}
+
+
+
+table {
+    align-content: center;
+}
+
+.title {
+    display: block;
+    font-size: larger;
+    text-align: center;
+    margin-top: 20px;
+    width: 200px;
+    height: 40px;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    justify-content: space-around;
+    padding: 0 0.2em;
+    text-align: center;
+    width: 5em;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    -webkit-text-fill-color: transparent;
+    /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #2b2a29;
+    cursor: pointer;
+}
+
+.star-rating :checked~label {
+    -webkit-text-fill-color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover~label {
+    -webkit-text-fill-color: #fff58c;
+}
+
+.inputBox {
+    width: 300px;
+    height: 100px;
+    size: 10px;
+    border: 1px solid black;
+}
+
+.inputB {
+    float: right;
+    text-align: center;
+
+    width: 96px;
+    height: 42px;
+    margin: 8px 0;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
