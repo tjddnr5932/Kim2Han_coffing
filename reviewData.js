@@ -17,7 +17,7 @@ function calc(reviews){
     let body = [];
     let sweet = [];
     let acidity = [];
-    let btterness = [];
+    let bitterness = [];
     let balance = [];
     let scope = [];
 
@@ -27,10 +27,10 @@ function calc(reviews){
       body.push(review[i].body);
       sweet.push(review[i].sweet);
       acidity.push(review[i].acidity);
-      btterness.push(review[i].btterness);
+      bitterness.push(review[i].bitterness);
       balance.push(review[i].balance);
       scope.push(review[i].scope);
-      console.log(i + 1 + " 번째 리뷰 \n카페명: " + cafe_name[i] + "\n맛: " + body[i]+'/'+sweet[i]+'/'+acidity[i]+'/'+btterness[i]+'/'+balance[i]  + "\n별점: " + scope[i]);
+      console.log(i + 1 + " 번째 리뷰 \n카페명: " + cafe_name[i] + "\n맛: " + body[i]+'/'+sweet[i]+'/'+acidity[i]+'/'+bitterness[i]+'/'+balance[i]  + "\n별점: " + scope[i]);
       i++;
     }
 
@@ -52,7 +52,7 @@ function calc(reviews){
         bo += body[idx];
         sw += sweet[idx];
         ac += acidity[idx];
-        bt += btterness[idx];
+        bt += bitterness[idx];
         ba += balance[idx];
         sc += scope[idx];
         idx = cafe_id.indexOf(cafe_list[i], idx + 1);
