@@ -54,17 +54,26 @@ router.get('/', function(request, response, next){
                     const name = result[0].name;
                     const age = result[0].age;
                     const gender = result[0].gender;
-                    const phone = result[0].phoneNum;
+                    let phone = result[0].phoneNum;
                     const birth = result[0].birth;
                     const location = result[0].location;
                     const pro = result[0].pro;
                     const taste = result[0].taste;
                     const latitude = result[0].latitude;
                     const longitude = result[0].longitude;
+                    const beanStr = result[0].bean;
+                    let bean;
                     let tasteArr;
                     let lat;
                     let lon;
                     let loc;
+
+                    if(beanStr===null){
+                      bean="아직 원두가 설정되지 않았습니다."
+                    }
+                    else{
+                      bean = JSON.parse(beanStr).beankr;
+                    }
                              
                     if(taste===null){
                       tasteArr=[0,0,0,0,0];
@@ -94,10 +103,12 @@ router.get('/', function(request, response, next){
                     
                     let yyyymmdd = new Date(birth.getFullYear(), birth.getMonth(), birth.getDate(), 9).toISOString().substring(0,10);
 
+                    phone = phone.slice(0,3) + '-' + phone.slice(3,7) + '-' + phone.slice(7);
+
                     if(list.length === filelist.length){
                       var flist = MyPage.list(filelist, list);
                       var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, yyyymmdd, loc,
-                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, pro, flist);
+                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, pro, bean, flist);
                       response.send(html);
                     }
 
@@ -144,17 +155,26 @@ router.post('/taste_process', function(request, response){
     var post = request.body;
     var id = request.user.id;
     const taste = post.body+"/"+post.sweet+"/"+post.acidity+"/"+post.bitterness+"/"+post.balance;
-    console.log(`UPDATE user SET taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-    db.query(`UPDATE user SET taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-    response.writeHead(302, {Location : '/mypage'});
-    response.end();
+    const bean_item = confiInfor.found_bean(taste, post.body, post.sweet, post.acidity, post.bitterness, post.balance);
+    if(bean_item===undefined){
+      response.send("<script>alert('선택하신 맛에 일치하는 원두가 없습니다.');location.href='/mypage';</script>");
+    }
+    else{
+      const beanStr = JSON.stringify(bean_item);
+      console.log(`UPDATE user SET bean='${beanStr}', taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
+      db.query(`UPDATE user SET bean='${beanStr}', taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
+      response.send(`<script>alert('${bean_item.beankr}(이/가) 선택되었습니다.');location.href='/mypage';</script>`);
+      response.end();
+    }
 });
+
 
 router.post('/mlocation_process', function(request, response){
     var post = request.body;
     var loc;
     var _lat = post.lat;
     var _lng = post.lng;
+    var distance = post.distance;
 
     geocoder.reverse({lat:parseFloat(_lat), lon:parseFloat(_lng)})
     .then((res)=> {
@@ -162,7 +182,7 @@ router.post('/mlocation_process', function(request, response){
         const temp = loc.split(",");
         const tmp = temp.reverse();
         const city = tmp[3];
-        db.query(`UPDATE user SET city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+        db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
     })
     .catch((err)=> {
         console.log(err);
@@ -177,6 +197,7 @@ router.post('/location_process', function(request, response){
     var _loc = post.loc;
     var _lat;
     var _lng;
+    var distance = post.distance;
 
     geocoder.geocode(_loc)
     .then((result)=> {
@@ -188,7 +209,7 @@ router.post('/location_process', function(request, response){
             const temp = loc.split(",");
             const tmp = temp.reverse();
             const city = tmp[3];
-            db.query(`UPDATE user SET city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
+            db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
         })
         .catch((err)=> {
             console.log(err);
@@ -248,7 +269,7 @@ router.post('/visit_cafe', function(request, response){  // 방문한 카페 등
 });
 
 router.get('/test', function(request, response){
-  var cafe = [
+  var cafe1 = [
       {
           cafe_id: "0",
           cafe_name: '성욱카페', 
@@ -286,7 +307,45 @@ router.get('/test', function(request, response){
           scope:4
       }
   ];
-  var html = recommendMap.HTML(cafe, 33.463701, 126.574667); //사용자 lat, lon넣기
+  var cafe2 = [
+    {
+        cafe_id: "0",
+        cafe_name: '2성욱카페', 
+        cafe_location: "충북대 후문",
+        cafe_latitude: 33.450601,
+        cafe_longitude: 126.570567,
+        cafe_bean:"2등 원두",
+        scope:null
+    },
+    {
+        cafe_id: "1",
+        cafe_name: '2봉주카페', 
+        cafe_location: "충북대 정문",
+        cafe_latitude: 33.451501,
+        cafe_longitude: 126.571467,
+        cafe_bean:"2등 원두",
+        scope:4
+    },
+    {
+        cafe_id: "1",
+        cafe_name: '2정래카페', 
+        cafe_location: "충북대 서문",
+        cafe_latitude: 33.452401,
+        cafe_longitude: 126.572367,
+        cafe_bean:"2등 원두",
+        scope:5
+    },
+    {
+        cafe_id: "0",
+        cafe_name: '2청주카페', 
+        cafe_location: "청주 어딘가",
+        cafe_latitude: 33.453301,
+        cafe_longitude: 126.573267,
+        cafe_bean:"2등 원두",
+        scope:4
+    }
+];
+  var html = recommendMap.HTML(cafe1, cafe2, 33.463701, 126.574667); //사용자 lat, lon넣기
   response.send(html);
 });
 
@@ -294,10 +353,11 @@ router.get('/test', function(request, response){
 router.post('/comment_public/:cafe_id', function(request, response){ //일반인 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_public WHERE cafe_id = "${cafe_id}"`, function(error, result){
-    var body = "<h1 align='center'>일반인 댓글 보기<h1>";
+
+    var body = "<h1>일반인 댓글 보기</h1>";
     var i = 0;
     while(i<result.length){
-      if(result[i].comment!=null&&result[i].comment!='')body+=`<p align='center'>${i}번째: ${result[i].comment}</p>`;
+      if(result[i].comment!=null&&result[i].comment!='')body+=`<p>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
     response.send(body);
@@ -308,11 +368,11 @@ router.post('/comment_public/:cafe_id', function(request, response){ //일반인
 router.post('/comment_pro/:cafe_id', function(request, response){ //전문가 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_pro WHERE cafe_id = "${cafe_id}"`, function(error, result){
-    var body = "<h1 align='center'>전문가 댓글 보기<h1>";
+    var body = "<h1>전문가 댓글 보기</h1>";
     var i = 0;
     console.log(result.length);
     while(i<result.length){
-      if(result[i].comment!=null&&result[i].comment!='')body+=`<p align='center'>${i}번째: ${result[i].comment}</p>`;
+      if(result[i].comment!=null&&result[i].comment!='')body+=`<p>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
     response.send(body);
@@ -349,8 +409,6 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
 
           const distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
           var body = `      
-          <td align="center" style="width: 33.3%; border-right: 1px solid black;">
-          <div align="left" style="margin-left: 39%;">
             <h1 style="margin-top: 80px;">${cafe_name}</h1>
             원두 <input class="inputA" id="my_ID" type="text" readonly value= "${cafe_bean}" style="margin-left: 24.5px;"><br>
             위치 <input class="inputA" id="my_Birth" type="text" readonly value="${cafe_location}" style="margin-left: 24.5px;"><br>
@@ -359,32 +417,30 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
             일반인 <input class="inputB" id="my_Name" type="text" readonly value="${cafe_review_public}" style="margin-left: 7px; margin-right: 20px;">
             전문가 <input class="inputB" id="my_Age" type="text" readonly value="${cafe_review_pro}" style="margin:0px 7px;"><br> `
           if(filterId==='recommend'){
-            console.log(filterId);
             body+=`
             별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24px; margin-right: 19.5px;">
             추천맵 <input class="inputB" id="my_Age" type="button" onClick="history.go(-1);" value="돌아가기" style="margin:0px 7px;"><br>
-            </form>
-            </div>
-            </td>`;
+            `;
           }
           else{
-            console.log(filterId);
             body+=`
-            별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24.5px;"><br>
-            </div>
-            </td>`;
+            별점 <input class="inputB" id="my_Phone" type="text" readonly value="${scope}" style="margin-left: 24.5px;">
+            방문기록 <input class="inputB" id="my_Age" type="button" onClick="history.go(-1);" value="돌아가기" style="margin:0px 7px;"><br>
+            `;
           }
-
+          //test용 사진
+          let img = `<img src = '../../image/test2.jpg' style='width:auto; height:300px'/>
+          <img src = '../../image/test2.jpg' style='width:auto; height:300px'/>`;
           if(photoStr==undefined);
           else{ 
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
-              body += `<input src = ${photo[0].src.replace('public', '..')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
+              img += `<img src = ${photo[0].src.replace('public', '..')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
               i++;
             }
           }
-          var html = viewCafe.HTML(cafe_id, body);
+          var html = viewCafe.HTML(cafe_id, body, img);
           response.send(html);
         }
       });
@@ -409,6 +465,7 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
       var balance = post.balance;
       var scope = post.scope;
       var comment = post.comment;
+      console.log(cafe_id);
     
       
       if(result[0].pro){
@@ -495,9 +552,10 @@ router.post('/write_review', function(request, response, next){
         next(error);
     }
     else{
-      var post = request.body;
-      var cafe_id = post.cafe_id;
-      var html = writeReview.HTML(cafe_id);
+      const post = request.body;
+      const cafe_id = post.cafe_id;
+      const cafe_name = post.cafe_name;
+      var html = writeReview.HTML(cafe_id, cafe_name);
       response.send(html);
     }
   });
@@ -601,6 +659,7 @@ router.post('/:pageId', function(request, response, next){
                           </form>             
                           <form action="write_review" method="post">
                           <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
+                          <input type="hidden" name="cafe_name" value = "${res[0].cafe_name}">
                           <td><input class="inputB" type="submit" value="리뷰 쓰기"><td>
                           </form>
                           </tr>
