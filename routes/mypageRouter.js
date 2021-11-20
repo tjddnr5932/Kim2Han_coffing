@@ -611,6 +611,10 @@ router.post('/:pageId', function(request, response, next){
             next(error);
         }
         else{
+          if(request.user===undefined) {
+            response.send("<script>alert('로그인 후 이용할 수 있습니다.');location.href='/';</script>");
+          }
+          else{
             var title = request.params.pageId;
             var sanitizeTitle = sanitizeHtml(title);
             if(title === "tasteSetting"){
@@ -724,6 +728,7 @@ router.post('/:pageId', function(request, response, next){
                 }
               });
             }
+          }
         }
     });
 });

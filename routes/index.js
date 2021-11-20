@@ -10,9 +10,7 @@ router.get('/', function(request, response, next){
             next(error);
         }
         else{
-            var title = "메인 페이지";
-            request.session.lognum = 0;
-            var html = mainPage.HTML(title, auth.StatusUI(request, response));
+            var html = mainPage.HTML(auth.StatusUI(request));
             response.send(html);
         }
     });
