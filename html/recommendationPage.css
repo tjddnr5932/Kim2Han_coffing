@@ -1,0 +1,190 @@
+@font-face {
+    font-family: "Machineat_Demo.ttf";
+    src: url("./Machineat_Demo.ttf");
+}
+
+@font-face {
+    font-family: "NotoSerifKR-Bold";
+    src: url("./NotoSerifKR-Bold.otf");
+}
+
+body {
+    /* font-family: "Machineat_Demo.ttf"; */
+    font-family: "NotoSerifKR-Bold";
+
+    color: white;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+
+header {
+    height: 100px;
+    font-family: "NotoSerifKR-Bold";
+
+}
+
+#my_location {
+    border: hidden;
+    font-size: larger;
+    display: inline;
+    pointer-events: none;
+}
+
+#my_flavor {
+    color: white;
+    font-family: "NotoSerifKR-Bold";
+    background: none;
+    border: hidden;
+    font-size: larger;
+    display: inline;
+    pointer-events: none;
+}
+
+.l1 {
+    position: absolute;
+    right: 47%;
+    width: 200px;
+    top: 0;
+    margin-top: 0;
+}
+
+.logout {
+    position: absolute;
+    right: 10px;
+}
+
+.logout1 {
+    position: absolute;
+    right: 120px;
+}
+
+header table td {
+    padding: 35px 30px;
+}
+
+header table td a {
+    text-decoration: none;
+    font-size: larger;
+    color: black;
+}
+
+main {
+    background-image: url("./recommendationPage2.jpg");
+    height: 800px;
+    background-size: 100%;
+}
+
+.mapButton {
+    float: right;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bolder;
+    width: 160px;
+    height: 70px;
+    margin: 8px 0;
+    margin-top: 10px;
+    margin-right: 30px;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border: 1px solid #ffcb00;
+    border-radius: 4px;
+    background-color: #ffcb00;
+    box-sizing: border-box;
+}
+
+.button2{
+    float: right;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    width: 150px;
+    height: 30px;
+    margin: 8px 0;
+    margin-top: 10px;
+    margin-right: 10px;
+    padding-bottom: 3.0px;
+    display: inline-block;
+    border: 1px solid #ffcb00;
+    border-radius: 4px;
+    background-color: #ffcb00;
+    box-sizing: border-box;
+}
+
+.listdiv {
+    background: white;
+    color: black;
+    height: 650px;
+    width: 300px;
+    border: 3px solid white;
+    padding: 0px;
+    margin-left: 65px;
+    display: inline-block;
+    border-radius: 8px;
+}
+
+.list_name {
+    padding: 5px;
+    font-size: 30px;
+}
+
+.list_Rank {
+    float: right;
+    margin-right: 5px;
+}
+
+.list_address {
+    white-space: normal;
+
+    padding: 5px;
+    font-size: 25px;
+}
+
+.list_distance {
+
+    padding: 5px;
+    font-size: 25px;
+}
+
+.list_starRank {
+
+    padding: 5px;
+    font-size: 25px;
+}
+
+.list_radarchart {
+    background: white;
+    width: 300px;
+    height: 300px;
+}
+
+
+.star-ratings {
+    font-size: 25px;
+    color: #aaa9a9;
+    position: relative;
+    unicode-bidi: bidi-override;
+    width: max-content;
+    -webkit-text-fill-color: transparent;
+    /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1.3px;
+    -webkit-text-stroke-color: #2b2a29;
+}
+
+.star-ratings-fill {
+    color: #fff58c;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    -webkit-text-fill-color: gold;
+}
+
+.star-ratings-base {
+    z-index: 0;
+    padding: 0;
+}
