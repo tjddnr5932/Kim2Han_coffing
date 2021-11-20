@@ -11,11 +11,10 @@ const proofSetting = require('../lib/mypages/proof.js');
 const visitedList = require('../lib/mypages/visitedList.js');
 const writeReview = require('../lib/writeReview.js');
 const viewCafe = require('../lib/viewCafe.js');
-const recommendMap = require('../lib/recommendMap.js');
+const recommendList = require('../lib/recommendList.js');
 const myReview = require('../lib/myReview.js');
 const mysql = require('mysql');
 const multer = require('multer');
-
 var _storage = multer.diskStorage({
   destination:function(req,file,cb){
     cb(null,'uploads/')
@@ -271,84 +270,8 @@ router.post('/visit_cafe', function(request, response){  // 방문한 카페 등
   });
 });
 
-router.get('/test', function(request, response){
-  var cafe1 = [
-      {
-          cafe_id: "0",
-          cafe_name: '성욱카페', 
-          cafe_location: "충북대 후문",
-          cafe_latitude: 33.450701,
-          cafe_longitude: 126.570667,
-          cafe_bean:"원두 좋아",
-          scope:null
-      },
-      {
-          cafe_id: "1",
-          cafe_name: '봉주카페', 
-          cafe_location: "충북대 정문",
-          cafe_latitude: 33.451701,
-          cafe_longitude: 126.571667,
-          cafe_bean:"원두 좋아",
-          scope:4
-      },
-      {
-          cafe_id: "1",
-          cafe_name: '정래카페', 
-          cafe_location: "충북대 서문",
-          cafe_latitude: 33.452701,
-          cafe_longitude: 126.572667,
-          cafe_bean:"원두 좋아",
-          scope:5
-      },
-      {
-          cafe_id: "0",
-          cafe_name: '청주카페', 
-          cafe_location: "청주 어딘가",
-          cafe_latitude: 33.453701,
-          cafe_longitude: 126.573667,
-          cafe_bean:"좋은 원두",
-          scope:4
-      }
-  ];
-  var cafe2 = [
-    {
-        cafe_id: "0",
-        cafe_name: '2성욱카페', 
-        cafe_location: "충북대 후문",
-        cafe_latitude: 33.450601,
-        cafe_longitude: 126.570567,
-        cafe_bean:"2등 원두",
-        scope:null
-    },
-    {
-        cafe_id: "1",
-        cafe_name: '2봉주카페', 
-        cafe_location: "충북대 정문",
-        cafe_latitude: 33.451501,
-        cafe_longitude: 126.571467,
-        cafe_bean:"2등 원두",
-        scope:4
-    },
-    {
-        cafe_id: "1",
-        cafe_name: '2정래카페', 
-        cafe_location: "충북대 서문",
-        cafe_latitude: 33.452401,
-        cafe_longitude: 126.572367,
-        cafe_bean:"2등 원두",
-        scope:5
-    },
-    {
-        cafe_id: "0",
-        cafe_name: '2청주카페', 
-        cafe_location: "청주 어딘가",
-        cafe_latitude: 33.453301,
-        cafe_longitude: 126.573267,
-        cafe_bean:"2등 원두",
-        scope:4
-    }
-];
-  var html = recommendMap.HTML(cafe1, cafe2, 33.463701, 126.574667); //사용자 lat, lon넣기
+router.get('/list', function(request, response){
+  const html = recommendList.html();
   response.send(html);
 });
 
