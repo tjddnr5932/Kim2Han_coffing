@@ -45,7 +45,7 @@ header table td a{
     color: black;
 }
 main{
-    background-image: url("./mainPage.jpg");
+    background-image: url("../image/pages/mainPage.jpg");
     height: 800px;
     background-size: cover;
 }

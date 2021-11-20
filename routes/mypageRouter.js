@@ -12,6 +12,7 @@ const visitedList = require('../lib/mypages/visitedList.js');
 const writeReview = require('../lib/writeReview.js');
 const viewCafe = require('../lib/viewCafe.js');
 const recommendMap = require('../lib/recommendMap.js');
+const myReview = require('../lib/myReview.js');
 const mysql = require('mysql');
 const multer = require('multer');
 
@@ -436,7 +437,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
-              img += `<img src = ${photo[0].src.replace('public', '..')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
+              img += `<img src = ${photo[0].src.replace('public', '')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
               i++;
             }
           }
@@ -561,6 +562,47 @@ router.post('/write_review', function(request, response, next){
   });
 });
 
+router.post('/my_review', function(request, response, next){
+  const post = request.body;
+  const cafe_id = post.cafe_id;
+  const cafe_name = post.cafe_name;
+
+  db.query(`SELECT cafe_location, cafe_latitude, cafe_longitude FROM cafe WHERE cafe_id = "${cafe_id}"`, function(error, result){
+    if(error){
+      console.log(error);
+    }
+    else{
+      console.log(result[0].cafe_latitude, result[0].cafe_longitude);
+      db.query(`SELECT latitude, longitude, pro FROM user WHERE id = "${request.user.id}"`, function(err, res){
+        if(err){
+          console.log(err);
+        }
+        else{
+          let review;
+          if(res[0].pro === true){review = 'review_pro';}
+          else{review = 'review_public';}
+          const distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
+
+          db.query(`SELECT * FROM ${review} WHERE cafe_id = "${cafe_id}" AND user_id = "${request.user.id}"`, function(er, row){
+            if(er){
+              console.log(er);
+            }
+            else{
+              var comment = res[0].comment;
+              if(comment===undefined){
+                comment="코멘트를 작성하지 않으셨습니다."
+              }
+              console.log(comment);
+              var html = myReview.HTML(cafe_name, result[0].cafe_location, row[0].user_id, row[0].scope, row[0].body, row[0].sweet, row[0].acidity, row[0].bitterness, row[0].balance, comment);
+              response.send(html);
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
 
 router.post('/:pageId', function(request, response, next){
     var filterId = path.parse(request.params.pageId).base;
@@ -569,6 +611,10 @@ router.post('/:pageId', function(request, response, next){
             next(error);
         }
         else{
+          if(request.user===undefined) {
+            response.send("<script>alert('로그인 후 이용할 수 있습니다.');location.href='/';</script>");
+          }
+          else{
             var title = request.params.pageId;
             var sanitizeTitle = sanitizeHtml(title);
             if(title === "tasteSetting"){
@@ -632,6 +678,7 @@ router.post('/:pageId', function(request, response, next){
                     while(i<visited_list.length){    //방문한 카페의 갯수만큼 반복한다.
                       db.query(`SELECT cafe_name, cafe_id FROM cafe WHERE cafe_id = "${visited_list[i].cafe_id}"`, function(err, res){ //index번째 방문기록의 cafe_id와 일치하는 튜풀들의 cafe_name을 res에 받아온다.
                         if(visited_list[j].review){ //review를 썻을 때, 모든 사용자들의 리뷰보기 가능
+                          console.log(res[0].cafe_id);
                           response.write(`
                           <div align="center">
                           <table>
@@ -640,6 +687,11 @@ router.post('/:pageId', function(request, response, next){
                           <form action="view_cafe/normal" method="post">
                           <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                           <td><input class="inputB" type="submit" value="카페 정보"><td>
+                          </form>
+                          <form action="my_review" method="post">
+                          <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
+                          <input type="hidden" name="cafe_name" value = "${res[0].cafe_name}">
+                          <td><input class="inputB" type="submit" value="나의 리뷰"><td>
                           </form>
                           </tr>
                           </table>
@@ -676,6 +728,7 @@ router.post('/:pageId', function(request, response, next){
                 }
               });
             }
+          }
         }
     });
 });
