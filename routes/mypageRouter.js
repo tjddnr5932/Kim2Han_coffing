@@ -182,7 +182,8 @@ router.post('/mlocation_process', function(request, response){
         loc = res[0].formattedAddress;
         const temp = loc.split(",");
         const tmp = temp.reverse();
-        const city = tmp[3];
+        const citytemp = tmp[3];
+        const city = citytemp.replace(/ /g, '');
         db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
     })
     .catch((err)=> {
@@ -209,7 +210,8 @@ router.post('/location_process', function(request, response){
             const loc = res[0].formattedAddress;
             const temp = loc.split(",");
             const tmp = temp.reverse();
-            const city = tmp[3];
+            const citytemp = tmp[3];
+            const city = citytemp.replace(/ /g, '');
             db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
         })
         .catch((err)=> {
