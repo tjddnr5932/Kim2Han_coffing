@@ -6,7 +6,7 @@ html{
 
 @font-face {
     font-family: "NotoSerifKR-Bold";
-    src: url("/NotoSerifKR-Bold.otf");
+    src: url("../css/NotoSerifKR-Bold.otf");
 }
 
 input[type=radio],input[type=radio]:checked {
