@@ -1,0 +1,54 @@
+
+@font-face {
+    font-family: "Machineat_Demo.ttf";
+    src: url("./Machineat_Demo.ttf");
+}
+
+@font-face {
+    font-family: "NotoSerifKR-Bold";
+    src: url("./NotoSerifKR-Bold.otf");
+}
+
+body{
+    font-family: "Machineat_Demo.ttf";
+
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+header{
+    height:100px;
+    font-family: "NotoSerifKR-Bold";
+    
+}
+.l1{
+    position: absolute;
+    right: 47%;
+    width: 200px;
+    top: 0;
+    margin-top: 0;
+}
+.logout{
+    position: absolute;
+    right: 10px;
+}
+.logout1{
+    position: absolute;
+    right: 120px;
+}
+header table td{
+    padding:35px 30px;
+}
+header table td a{
+    text-decoration: none;
+    font-size: larger;
+    color: black;
+}
+main{
+    background-image: url("./mainPage.jpg");
+    height: 800px;
+    background-size: cover;
+}
+main div{
+    padding-top: 300px;
+}
