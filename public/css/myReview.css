@@ -1,8 +1,61 @@
-main{
-    width: 540px;
-    height:800px;
-    border: 1px solid black;
+body {
+    margin: 0;
+    padding-top: 50px;
+    background-color: white;
+    background-image: url("../image/pages/myreview.jpg");
 }
-#radar-chart{
-    font-size: 50px;
+
+@font-face {
+    font-family: "NotoSerifKR-Bold";
+    src: url("../css/NotoSerifKR-Bold.otf");
+}
+
+header {
+    background-color: white;
+}
+
+main {
+    font-family: "NotoSerifKR-Bold";
+    background: white;
+    color: black;
+    width: 540px;
+    height:850px;
+    border: 1px solid black;
+    /* 사이즈 축소는 의도적으로 해놈 */
+    background-size: 70%;
+    background-position: left;
+}
+
+.list_starRank {
+    padding: 5px;
+    font-size: 25px;
+}
+
+.star-ratings {
+    font-size: 25px;
+    color: #aaa9a9;
+    position: relative;
+    unicode-bidi: bidi-override;
+    width: max-content;
+    -webkit-text-fill-color: transparent;
+    /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1.3px;
+    -webkit-text-stroke-color: #2b2a29;
+}
+
+.star-ratings-fill {
+    color: #fff58c;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    -webkit-text-fill-color: gold;
+}
+
+.star-ratings-base {
+    z-index: 0;
+    padding: 0;
 }

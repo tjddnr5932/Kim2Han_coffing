@@ -112,7 +112,7 @@ module.exports = function(passport){
         console.log(request.user.id + "이/가 로그아웃")
         request.logout();
         request.session.save(function(){
-            response.send("<script>alert('로그아웃 완료');location.href='/';</script>");
+            response.send("<script>alert('로그아웃 완료');location.href='/'; </script>");
         })
     });
     return router;

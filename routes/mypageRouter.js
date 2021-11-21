@@ -11,11 +11,11 @@ const proofSetting = require('../lib/mypages/proof.js');
 const visitedList = require('../lib/mypages/visitedList.js');
 const writeReview = require('../lib/writeReview.js');
 const viewCafe = require('../lib/viewCafe.js');
+const recommendList = require('../lib/recommendList.js');
 const recommendMap = require('../lib/recommendMap.js');
 const myReview = require('../lib/myReview.js');
 const mysql = require('mysql');
 const multer = require('multer');
-
 var _storage = multer.diskStorage({
   destination:function(req,file,cb){
     cb(null,'uploads/')
@@ -182,7 +182,8 @@ router.post('/mlocation_process', function(request, response){
         loc = res[0].formattedAddress;
         const temp = loc.split(",");
         const tmp = temp.reverse();
-        const city = tmp[3];
+        const citytemp = tmp[3];
+        const city = citytemp.replace(/ /g, '');
         db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
     })
     .catch((err)=> {
@@ -209,7 +210,8 @@ router.post('/location_process', function(request, response){
             const loc = res[0].formattedAddress;
             const temp = loc.split(",");
             const tmp = temp.reverse();
-            const city = tmp[3];
+            const citytemp = tmp[3];
+            const city = citytemp.replace(/ /g, '');
             db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
         })
         .catch((err)=> {
@@ -277,8 +279,8 @@ router.get('/test', function(request, response){
           cafe_location: "충북대 후문",
           cafe_latitude: 33.450701,
           cafe_longitude: 126.570667,
-          cafe_bean:"원두 좋아",
-          scope:null
+          cafe_bean:"3/2/3/2/3",
+          scope:3.5
       },
       {
           cafe_id: "1",
@@ -286,7 +288,7 @@ router.get('/test', function(request, response){
           cafe_location: "충북대 정문",
           cafe_latitude: 33.451701,
           cafe_longitude: 126.571667,
-          cafe_bean:"원두 좋아",
+          cafe_bean:"4/4/4/4/4",
           scope:4
       },
       {
@@ -306,7 +308,43 @@ router.get('/test', function(request, response){
           cafe_longitude: 126.573667,
           cafe_bean:"좋은 원두",
           scope:4
-      }
+      },
+      {
+        cafe_id: "0",
+        cafe_name: '성욱카페', 
+        cafe_location: "충북대 후문",
+        cafe_latitude: 33.450701,
+        cafe_longitude: 126.570667,
+        cafe_bean:"3/2/3/2/3",
+        scope:3.5
+    },
+    {
+        cafe_id: "1",
+        cafe_name: '봉주카페', 
+        cafe_location: "충북대 정문",
+        cafe_latitude: 33.451701,
+        cafe_longitude: 126.571667,
+        cafe_bean:"원두 좋아",
+        scope:4
+    },
+    {
+        cafe_id: "1",
+        cafe_name: '정래카페', 
+        cafe_location: "충북대 서문",
+        cafe_latitude: 33.452701,
+        cafe_longitude: 126.572667,
+        cafe_bean:"원두 좋아",
+        scope:5
+    },
+    {
+        cafe_id: "0",
+        cafe_name: '청주카페', 
+        cafe_location: "청주 어딘가",
+        cafe_latitude: 33.453701,
+        cafe_longitude: 126.573667,
+        cafe_bean:"좋은 원두",
+        scope:4
+    }
   ];
   var cafe2 = [
     {
@@ -344,12 +382,136 @@ router.get('/test', function(request, response){
         cafe_longitude: 126.573267,
         cafe_bean:"2등 원두",
         scope:4
-    }
+    },
+    {
+      cafe_id: "0",
+      cafe_name: '2성욱카페', 
+      cafe_location: "충북대 후문",
+      cafe_latitude: 33.450601,
+      cafe_longitude: 126.570567,
+      cafe_bean:"2등 원두",
+      scope:null
+  },
+  {
+      cafe_id: "1",
+      cafe_name: '2봉주카페', 
+      cafe_location: "충북대 정문",
+      cafe_latitude: 33.451501,
+      cafe_longitude: 126.571467,
+      cafe_bean:"2등 원두",
+      scope:4
+  },
+  {
+      cafe_id: "1",
+      cafe_name: '2정래카페', 
+      cafe_location: "충북대 서문",
+      cafe_latitude: 33.452401,
+      cafe_longitude: 126.572367,
+      cafe_bean:"2등 원두",
+      scope:5
+  },
+  {
+      cafe_id: "0",
+      cafe_name: '2청주카페', 
+      cafe_location: "청주 어딘가",
+      cafe_latitude: 33.453301,
+      cafe_longitude: 126.573267,
+      cafe_bean:"2등 원두",
+      scope:4
+  }
 ];
-  var html = recommendMap.HTML(cafe1, cafe2, 33.463701, 126.574667); //사용자 lat, lon넣기
+var cafe3=[
+  {
+    cafe_id: "0",
+    cafe_name: '성욱카페', 
+    cafe_location: "충북대 후문",
+    cafe_latitude: 33.450701,
+    cafe_longitude: 126.570667,
+    cafe_bean:"원두 좋아",
+    scope:null
+},
+{
+    cafe_id: "1",
+    cafe_name: '봉주카페', 
+    cafe_location: "충북대 정문",
+    cafe_latitude: 33.451701,
+    cafe_longitude: 126.571667,
+    cafe_bean:"원두 좋아",
+    scope:4
+},
+{
+    cafe_id: "1",
+    cafe_name: '정래카페', 
+    cafe_location: "충북대 서문",
+    cafe_latitude: 33.452701,
+    cafe_longitude: 126.572667,
+    cafe_bean:"원두 좋아",
+    scope:5
+},
+{
+    cafe_id: "0",
+    cafe_name: '청주카페', 
+    cafe_location: "청주 어딘가",
+    cafe_latitude: 33.453701,
+    cafe_longitude: 126.573667,
+    cafe_bean:"좋은 원두",
+    scope:4
+},
+{
+  cafe_id: "0",
+  cafe_name: '성욱카페', 
+  cafe_location: "충북대 후문",
+  cafe_latitude: 33.450701,
+  cafe_longitude: 126.570667,
+  cafe_bean:"원두 좋아",
+  scope:null
+},
+{
+  cafe_id: "1",
+  cafe_name: '봉주카페', 
+  cafe_location: "충북대 정문",
+  cafe_latitude: 33.451701,
+  cafe_longitude: 126.571667,
+  cafe_bean:"원두 좋아",
+  scope:4
+},
+{
+  cafe_id: "1",
+  cafe_name: '정래카페', 
+  cafe_location: "충북대 서문",
+  cafe_latitude: 33.452701,
+  cafe_longitude: 126.572667,
+  cafe_bean:"원두 좋아",
+  scope:5
+},
+{
+  cafe_id: "0",
+  cafe_name: '청주카페', 
+  cafe_location: "청주 어딘가",
+  cafe_latitude: 33.453701,
+  cafe_longitude: 126.573667,
+  cafe_bean:"좋은 원두",
+  scope:4
+}
+]
+  var html = recommendMap.HTML(cafe1, cafe2, cafe3, 33.463701, 126.574667); //사용자 lat, lon넣기
   response.send(html);
 });
 
+router.post('/list', function(request, response){
+  const post = request.body;
+  const cafe1 = JSON.parse(post.cafe1);
+  const cafe2 = JSON.parse(post.cafe2);
+  const cafe3 = JSON.parse(post.cafe3);
+  db.query(`SELECT body, sweet, acidity, bitterness, balance, location FROM user WHERE id = "${request.user.id}"`, function(err, res){
+    const temp = res[0].location.split(",");
+    temp.pop();
+    temp.pop();
+    const loc=temp.reverse().join(" ");
+    let html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc);
+    response.send(html);
+  });
+});
 
 router.post('/comment_public/:cafe_id', function(request, response){ //일반인 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
@@ -385,6 +547,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
   var filterId = path.parse(request.params.pageId).base;
   const post = request.body;
   const cafe_id = post.cafe_id;
+  console.log(cafe_id);
 
   db.query(`SELECT * FROM cafe WHERE cafe_id = "${cafe_id}"`, function(error, result){
     if(error){
@@ -573,7 +736,7 @@ router.post('/my_review', function(request, response, next){
     }
     else{
       console.log(result[0].cafe_latitude, result[0].cafe_longitude);
-      db.query(`SELECT latitude, longitude, pro FROM user WHERE id = "${request.user.id}"`, function(err, res){
+      db.query(`SELECT latitude, longitude, pro, body, sweet, acidity, bitterness, balance FROM user WHERE id = "${request.user.id}"`, function(err, res){
         if(err){
           console.log(err);
         }
@@ -593,7 +756,7 @@ router.post('/my_review', function(request, response, next){
                 comment="코멘트를 작성하지 않으셨습니다."
               }
               console.log(comment);
-              var html = myReview.HTML(cafe_name, result[0].cafe_location, row[0].user_id, row[0].scope, row[0].body, row[0].sweet, row[0].acidity, row[0].bitterness, row[0].balance, comment);
+              var html = myReview.HTML(cafe_name, result[0].cafe_location, row[0].user_id, row[0].scope, row[0].body, row[0].sweet, row[0].acidity, row[0].bitterness, row[0].balance, comment, res[0].balance, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance);
               response.send(html);
             }
           });
@@ -658,7 +821,7 @@ router.post('/:pageId', function(request, response, next){
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link rel="stylesheet" href="../css/tasteSetting.css">
-                    <title>CoffingProject - ${title}</title>
+                    <title>Coffing - ${title}</title>
                     </head>
                     <body>
                     <h1 align="center" style="margin-top:200px">방문한 카페 목록</h1>

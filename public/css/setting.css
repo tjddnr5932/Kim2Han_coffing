@@ -8,10 +8,10 @@ body {
     background-position: center;
 }
 
-/*@font-face {
+@font-face {
     font-family: "NotoSerifKR-Bold";
-    src: url("./NotoSerifKR-Bold.otf");
-}*/
+    src: url("../css/NotoSerifKR-Bold.otf");
+}
 
 header {
     height: 100px;
