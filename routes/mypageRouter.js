@@ -736,7 +736,7 @@ router.post('/my_review', function(request, response, next){
     }
     else{
       console.log(result[0].cafe_latitude, result[0].cafe_longitude);
-      db.query(`SELECT latitude, longitude, pro FROM user WHERE id = "${request.user.id}"`, function(err, res){
+      db.query(`SELECT latitude, longitude, pro, body, sweet, acidity, bitterness, balance FROM user WHERE id = "${request.user.id}"`, function(err, res){
         if(err){
           console.log(err);
         }
@@ -756,7 +756,7 @@ router.post('/my_review', function(request, response, next){
                 comment="코멘트를 작성하지 않으셨습니다."
               }
               console.log(comment);
-              var html = myReview.HTML(cafe_name, result[0].cafe_location, row[0].user_id, row[0].scope, row[0].body, row[0].sweet, row[0].acidity, row[0].bitterness, row[0].balance, comment);
+              var html = myReview.HTML(cafe_name, result[0].cafe_location, row[0].user_id, row[0].scope, row[0].body, row[0].sweet, row[0].acidity, row[0].bitterness, row[0].balance, comment, res[0].balance, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance);
               response.send(html);
             }
           });
