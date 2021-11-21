@@ -503,12 +503,15 @@ router.post('/list', function(request, response){
   const cafe1 = JSON.parse(post.cafe1);
   const cafe2 = JSON.parse(post.cafe2);
   const cafe3 = JSON.parse(post.cafe3);
-  db.query(`SELECT body, sweet, acidity, bitterness, balance FROM user WHERE id = "${request.user.id}"`, function(err, res){
-    let html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance);
+  db.query(`SELECT body, sweet, acidity, bitterness, balance, location FROM user WHERE id = "${request.user.id}"`, function(err, res){
+    const temp = res[0].location.split(",");
+    temp.pop();
+    temp.pop();
+    const loc=temp.reverse().join(" ");
+    let html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc);
     response.send(html);
   });
 });
-
 
 router.post('/comment_public/:cafe_id', function(request, response){ //일반인 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
