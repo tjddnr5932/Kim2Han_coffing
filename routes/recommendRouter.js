@@ -288,6 +288,7 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude); //사용자 lat, lon넣기
                           res.send(html);
                         }
                       });
