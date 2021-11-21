@@ -42,6 +42,17 @@ function getDistance(lat1, lon1, lat2, lon2) {              //현재위치와 �
     return dist;                                    //dist의 단위는 m 이다.
 }
 
+function compare(a,b){                            //두배열을 비교하는 함수 true : 원소전부 같은 배열 , false : 원소 중 하나라도 다른 배열
+  var c = true;
+  for(var i=0; i<a.length;i++){
+    if(a[i] != b[i]){
+      c = false;
+      break;
+    }
+  }
+  return c;
+}
+
 
 router.post('/', function(request, response, next){
   fs.readdir('./lib/recommendPages', function(error, filelist){
