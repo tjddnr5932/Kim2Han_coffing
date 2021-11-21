@@ -10,17 +10,19 @@ body {
 }
 
 header {
-    height: 100px;
+    height: 00px;
 }
 
 main {
+    padding-top: 100px;
     font-family: "NotoSerifKR-Bold";
     background: black;
     color: white;
     height: 700px;
-    /* background-image: url("./cafe_register.jpg"); */
-    background-size: 100%;
-    background-position: center;
+    background-image: url("../image/pages/signup.jpg");
+    /* 사이즈 축소는 의도적으로 해놈 */
+    background-size: 70%;
+    background-position: left;
 }
 
 table{
