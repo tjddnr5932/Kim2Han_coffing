@@ -9,7 +9,8 @@
 }
 
 body {
-    /* font-family: "Machineat_Demo.ttf"; */
+    background-image: url("../image/recommendationPage2.jpg");
+    font-family: "Machineat_Demo.ttf";
     font-family: "NotoSerifKR-Bold";
 
     color: white;
@@ -21,6 +22,7 @@ body {
 
 header {
     height: 100px;
+    background-color: white;
     font-family: "NotoSerifKR-Bold";
 
 }
@@ -71,7 +73,6 @@ header table td a {
 }
 
 main {
-    background-image: url("../image/recommendationPage2.jpg");
     height: 800px;
     background-size: 100%;
 }
@@ -120,6 +121,7 @@ main {
     border: 3px solid white;
     padding: 0px;
     margin-left: 65px;
+    margin-bottom: 65px;
     display: inline-block;
     border-radius: 8px;
 }
