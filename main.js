@@ -21,12 +21,15 @@ const passport = require('./lib/passport')(app);
 const mypageRouter = require('./routes/mypageRouter');
 const auth = require('./routes/auth')(passport);
 const index = require('./routes/index');
+const recommendRouter = require('./routes/recommendRouter')
 
 app.use('/', index); //메인페이지
 
 app.use('/auth', auth); //로그인 및 회원가입
 
 app.use('/mypage', mypageRouter); //마이페이지
+
+app.use('/recommendPage',recommendRouter);//추천페이지
 
 app.use(function(request, response, next){
     response.status(404).send("페이지를 찾지 못했습니다.");
