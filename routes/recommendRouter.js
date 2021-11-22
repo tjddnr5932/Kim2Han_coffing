@@ -9,6 +9,7 @@ const recommend1 = require('../lib/recommendPages/recommend1.js');
 const recommend2 = require('../lib/recommendPages/recommend2.js');
 const recommendMap = require('../lib/recommendMap.js');
 const recommendList = require('../lib/recommendList.js');
+const auth = require('../lib/auth');
 const mysql = require('mysql');
 const confiInfor = require('../dev/cofiInfor');
 const db = mysql.createConnection(
@@ -60,13 +61,8 @@ router.post('/', function(request, response, next){
       next(error);
     }
     else{
-      var title = "recommend";
-      var list = ["원두 추천", "일반인 평가 추천", "프로 평가 추천"];
-      if(list.length === filelist.length){
-        var flist = recommendpage.list(filelist, list);
-        var html = recommendpage.HTML(title, flist);
-        response.send(html);
-      }
+      var html = recommendpage.HTML(auth.StatusUI(request));
+      response.send(html);
     }
   });
 });
