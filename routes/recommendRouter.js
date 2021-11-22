@@ -7,8 +7,9 @@ const nodeGeocoder = require('node-geocoder');
 const recommendpage = require('../lib/recommendPage.js');
 const recommend1 = require('../lib/recommendPages/recommend1.js');
 const recommend2 = require('../lib/recommendPages/recommend2.js');
-const recommend3 = require('../lib/recommendPages/recommend3.js');
 const recommendMap = require('../lib/recommendMap.js');
+const recommendList = require('../lib/recommendList.js');
+const auth = require('../lib/auth');
 const mysql = require('mysql');
 const confiInfor = require('../dev/cofiInfor');
 const db = mysql.createConnection(
@@ -60,14 +61,29 @@ router.post('/', function(request, response, next){
       next(error);
     }
     else{
-      var title = "recommend";
-      var list = ["원두 추천", "일반인 평가 추천", "프로 평가 추천"];
-      if(list.length === filelist.length){
-        var flist = recommendpage.list(filelist, list);
-        var html = recommendpage.HTML(title, flist);
+      if(request.user===undefined) {
+        response.send("<script>alert('로그인이 필요합니다.');location.href='/';</script>");
+      }
+      else{
+        var html = recommendpage.HTML(auth.StatusUI(request));
         response.send(html);
       }
     }
+  });
+});
+
+router.post('/list', function(request, response){
+  const post = request.body;
+  const cafe1 = JSON.parse(post.cafe1);
+  const cafe2 = JSON.parse(post.cafe2);
+  const cafe3 = JSON.parse(post.cafe3);
+  db.query(`SELECT body, sweet, acidity, bitterness, balance, location FROM user WHERE id = "${request.user.id}"`, function(err, res){
+    const temp = res[0].location.split(",");
+    temp.pop();
+    temp.pop();
+    const loc=temp.reverse().join(" ");
+    let html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc);
+    response.send(html);
   });
 });
 
