@@ -61,8 +61,13 @@ router.post('/', function(request, response, next){
       next(error);
     }
     else{
-      var html = recommendpage.HTML(auth.StatusUI(request));
-      response.send(html);
+      if(request.user===undefined) {
+        response.send("<script>alert('로그인이 필요합니다.');location.href='/';</script>");
+      }
+      else{
+        var html = recommendpage.HTML(auth.StatusUI(request));
+        response.send(html);
+      }
     }
   });
 });

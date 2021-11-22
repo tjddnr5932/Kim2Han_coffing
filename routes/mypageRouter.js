@@ -40,7 +40,7 @@ router.get('/', function(request, response, next){
         }
         else{
             if(request.user===undefined) {
-                response.redirect('/');
+              response.send("<script>alert('로그인이 필요합니다.');location.href='/';</script>");
             }
             else{
                 var title = "MyPage";
