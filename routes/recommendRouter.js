@@ -7,8 +7,8 @@ const nodeGeocoder = require('node-geocoder');
 const recommendpage = require('../lib/recommendPage.js');
 const recommend1 = require('../lib/recommendPages/recommend1.js');
 const recommend2 = require('../lib/recommendPages/recommend2.js');
-const recommend3 = require('../lib/recommendPages/recommend3.js');
 const recommendMap = require('../lib/recommendMap.js');
+const recommendList = require('../lib/recommendList.js');
 const mysql = require('mysql');
 const confiInfor = require('../dev/cofiInfor');
 const db = mysql.createConnection(
@@ -68,6 +68,21 @@ router.post('/', function(request, response, next){
         response.send(html);
       }
     }
+  });
+});
+
+router.post('/list', function(request, response){
+  const post = request.body;
+  const cafe1 = JSON.parse(post.cafe1);
+  const cafe2 = JSON.parse(post.cafe2);
+  const cafe3 = JSON.parse(post.cafe3);
+  db.query(`SELECT body, sweet, acidity, bitterness, balance, location FROM user WHERE id = "${request.user.id}"`, function(err, res){
+    const temp = res[0].location.split(",");
+    temp.pop();
+    temp.pop();
+    const loc=temp.reverse().join(" ");
+    let html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc);
+    response.send(html);
   });
 });
 
