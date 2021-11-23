@@ -9,6 +9,7 @@ const recommend1 = require('../lib/recommendPages/recommend1.js');
 const recommend2 = require('../lib/recommendPages/recommend2.js');
 const recommendMap = require('../lib/recommendMap.js');
 const recommendList = require('../lib/recommendList.js');
+const recommendListDist = require('../lib/recommendListDist.js');
 const auth = require('../lib/auth');
 const mysql = require('mysql');
 const confiInfor = require('../dev/cofiInfor');
@@ -72,19 +73,24 @@ router.post('/', function(request, response, next){
   });
 });
 
-router.post('/list', function(request, response){
+router.post('/list/:pageId', function(request, response){
+  const filterId = path.parse(request.params.pageId).base;
   const post = request.body;
   const cafe1 = JSON.parse(post.cafe1);
   const cafe2 = JSON.parse(post.cafe2);
   const cafe3 = JSON.parse(post.cafe3);
-  db.query(`SELECT body, sweet, acidity, bitterness, balance, location FROM user WHERE id = "${request.user.id}"`, function(err, res){
-    const temp = res[0].location.split(",");
-    temp.pop();
-    temp.pop();
-    const loc=temp.reverse().join(" ");
-    let html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc);
-    response.send(html);
-  });
+  const title = post.title;
+  let html;
+
+    db.query(`SELECT body, sweet, acidity, bitterness, balance, location FROM user WHERE id = "${request.user.id}"`, function(err, res){
+      const temp = res[0].location.split(",");
+      temp.pop();
+      temp.pop();
+      const loc=temp.reverse().join(" ");
+      if(filterId==="grade"){html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      else{ console.log("ok"); html = recommendListDist.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      response.send(html);
+    });
 });
 
 router.post('/:pageId', function(req, res, next){
@@ -304,7 +310,7 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude); //사용자 lat, lon넣기
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title); //사용자 lat, lon넣기
                           res.send(html);
                         }
                       });
