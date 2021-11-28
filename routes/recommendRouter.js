@@ -301,6 +301,19 @@ router.post('/:pageId', function(req, res, next){
                                 };
                                 cafe2.push(cafe_json);
                               }
+                              else{
+                                var cafe_json = {
+                                  cafe_id: cafe[i].cafe_id,
+                                  cafe_name: cafe[i].cafe_name,
+                                  cafe_location: cafe[i].cafe_location,
+                                  cafe_latitude: cafe[i].cafe_latitude,
+                                  cafe_longitude: cafe[i].cafe_longitude,
+                                  cafe_distance:distance,
+                                  cafe_bean:cafe[i].cafe_bean,
+                                  scope:cafe[i].scope
+                                };
+                                cafe3.push(cafe_json);
+                              }
                             }
                           }
                         }
