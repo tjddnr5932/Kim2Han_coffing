@@ -10,6 +10,7 @@ const recommend2 = require('../lib/recommendPages/recommend2.js');
 const recommendMap = require('../lib/recommendMap.js');
 const recommendList = require('../lib/recommendList.js');
 const recommendListDist = require('../lib/recommendListDist.js');
+const recommendListScope = require('../lib/recommendListScope.js');
 const auth = require('../lib/auth');
 const mysql = require('mysql');
 const confiInfor = require('../dev/cofiInfor');
@@ -87,8 +88,18 @@ router.post('/list/:pageId', function(request, response){
       temp.pop();
       temp.pop();
       const loc=temp.reverse().join(" ");
-      if(filterId==="grade"){html = recommendList.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
-      else{ console.log("ok"); html = recommendListDist.html(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      if(filterId==="grade"){html = recommendList.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      else if(filterId==="distance"){html = recommendListDist.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      else if(filterId==="scope"){
+        var s_cafe1 = cafe1
+        var s_cafe2 = cafe2
+        var s_cafe3 = cafe3
+        function scopeSort(a, b) { if(a.scope == b.scope){ return 0} return a.scope < b.scope ? 1 : -1; }
+        s_cafe1.sort(scopeSort);
+        s_cafe2.sort(scopeSort);
+        s_cafe3.sort(scopeSort);
+        html = recommendListScope.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title, s_cafe1, s_cafe2, s_cafe3);
+      }
       response.send(html);
     });
 });
@@ -310,6 +321,8 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
+                          console.log("cafe1", cafe1);
+                          console.log("cafe2", cafe2);
                           var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title); //사용자 lat, lon넣기
                           res.send(html);
                         }
