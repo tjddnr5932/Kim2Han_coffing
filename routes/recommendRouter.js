@@ -56,6 +56,13 @@ function compare(a,b){                            //두배열을 비교하는 �
   return c;
 }
 
+function cafe_sort(a, b) {                       //distance로 정렬해주기 위해 json의 distance비교
+  if(a.cafe_distance == b.cafe_distance){
+    return 0;
+  }
+  return a.cafe_distance > b.cafe_distance ? 1 : -1;
+}
+
 
 router.post('/', function(request, response, next){
   fs.readdir('./lib/recommendPages', function(error, filelist){
@@ -108,7 +115,6 @@ router.post('/:pageId', function(req, res, next){
     let cafe1 = [];
     let cafe2 = [];
     let cafe3 = [];
-    let cafe3_sort = [];
     var filterId = path.parse(req.params.pageId).base;
     fs.readFile(`./lib/recommendPages/${filterId}.js`, 'utf-8', function(error){
         if(error){
@@ -316,6 +322,11 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
+                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+                          cafe2.sort(cafe_sort);
+                          cafe3.sort(cafe_sort);
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title);
+                          res.send(html);
                         }
                       });
                     }
@@ -518,8 +529,9 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          console.log("cafe1", cafe1);
-                          console.log("cafe2", cafe2);
+                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+                          cafe2.sort(cafe_sort);
+                          cafe3.sort(cafe_sort);
                           var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title); //사용자 lat, lon넣기
                           res.send(html);
                         }
