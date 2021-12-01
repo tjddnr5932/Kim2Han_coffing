@@ -1,7 +1,7 @@
 html{
 	scroll-behavior: smooth;
-    color: white;
-    background: black;
+    /* color: white;
+    background: black; */
 }
 
 @font-face {
@@ -35,8 +35,8 @@ body{
     background-position: center;
     font-family: "NotoSerifKR-Bold";
 
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
 }
 header{
     height: 0px;
@@ -46,7 +46,7 @@ main{
 }
 
 .select{
-    background-image: url("./cafe_register.jpg");
+    /* background-image: url("./cafe_register.jpg"); */
     background-size: 100%;
 
     width: 100%;
@@ -98,11 +98,12 @@ footer{
     text-align: center;
     align-items: center;
     height: 280px;
-    width: 400px;
+    width: 600px;
     border: 1px solid black;
 }
 
 .line{
     width:100px;
 }
+
 
