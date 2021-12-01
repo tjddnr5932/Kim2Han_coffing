@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/tasteSetting.css">
+  <link rel="stylesheet" href="/public/css/tasteSetting.css">
   <title>CoffingProject - ${title}</title>
 </head>
 
@@ -13,7 +13,7 @@
   <header></header>
   <main>
 
-    <table class="select">
+    <table class="select" id="select">
       <td class="font" align="center" colspan="2" style="font-size: 25px;">원하는 커피의 취향을 골라주세요</td>
       <tr>
         <td class="leftside">
@@ -33,8 +33,8 @@
               </td>
             </tr>
             <tr>
-              <td>신맛 또는 산미 이라고도 부르며, 신맛이라기 보다는 새콤한 맛으로도 표현 되기도 합니다. 사과에서 느껴지는 상쾌한 신맛에 비교되기도 하며, 주로 고급 아라비카 커피의 대표적인 맛으로
-                평가되기도 하죠.</td>
+              <td>신맛 또는 산미 이라고도 부르며, 신맛이라기 보다는 새콤한 맛으로도 표현 되기도 합니다.
+                <br>사과에서 느껴지는 상쾌한 신맛에 비교되기도 합니다.</td>
             </tr>
             <tr>
               <td><br></td>
@@ -44,7 +44,7 @@
               <td>Sweet</td>
             </tr>
             <tr>
-              <td>자당이나 과당이 녹아 있는 액체에서 느낄 수 있는 단맛이 나는 커피입니다. 예를 들면 과일, 초콜릿, 캐러멜처럼 단맛이 나는 맛입니다.</td>
+              <td>자당이나 과당이 녹아 있는 액체에서 느낄 수 있는 단맛이 나는 커피입니다.<br>과일, 초콜릿, 캐러멜처럼 단맛이 나는 맛입니다.</td>
             </tr>
             <tr>
               <td><br></td>
@@ -54,14 +54,15 @@
               <td>Biiterness</td>
             </tr>
             <tr>
-              <td>카페인, 퀴닌, 특정 알칼로이드가 녹아 있는 물에서 나는 맛입니다. 커피에서 쓴맛은 과하지 않은 수준에서 필요하다고 여겨집니다.</td>
+              <td>카페인, 퀴닌, 특정 알칼로이드가 녹아 있는 물에서 나는 맛입니다.</td>
             </tr>
             <tr>
-              <td>x</td>
+              <td><br></td>
             </tr>
 
             <tr>
-              <td>Balance <br> 커피 맛들의 조화로움을 밸런스라고 합니다. 맛의 균형 잡힌 커피를 표현할 때 '밸런스가 좋다' 라고 말합니다.</td>
+              <td>Balance <br> 커피 맛들의 조화로움을 밸런스라고 합니다. 
+                <br>맛의 균형 잡힌 커피를 표현할 때 '밸런스가 좋다' 라고 말합니다.</td>
             </tr>
 
             <tr>
@@ -176,12 +177,12 @@
   <div id="emptyBox2"></div>
 
   <footer id="brand">
+    <a href="#select" style="display: inline; text-decoration:none">올라가기</a>
     <div class="brand">
       <table align="center">
         <thead></thead>
         <tbody>
           <tr>
-            <td>
             <td>
               <div class="brandFlavor">맛 평가</div>
               <div class="brandLogo">이디야 로고</div>
