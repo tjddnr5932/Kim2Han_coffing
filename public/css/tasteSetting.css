@@ -34,8 +34,8 @@ body{
     /* background-color: black; */
     background-position: center;
     font-family: "NotoSerifKR-Bold";
-    background-image: url("/public/image/selectFlavor2.jpg");
-
+    background-image: url("/public/image/selectFlavor1.jpg");
+    background-size: 120%;
     margin: 0px;
     padding: 0px;
 }
