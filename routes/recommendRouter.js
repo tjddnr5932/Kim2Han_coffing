@@ -95,17 +95,24 @@ router.post('/list/:pageId', function(request, response){
       temp.pop();
       temp.pop();
       const loc=temp.reverse().join(" ");
-      if(filterId==="grade"){html = recommendList.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
-      else if(filterId==="distance"){html = recommendListDist.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      if(filterId==="grade"){
+        cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+        cafe2.sort(cafe_sort);
+        cafe3.sort(cafe_sort);
+        html = recommendList.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);
+      }
+      else if(filterId==="distance"){
+        cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+        cafe2.sort(cafe_sort);
+        cafe3.sort(cafe_sort);
+        html = recommendListDist.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);
+      }
       else if(filterId==="scope"){
-        var s_cafe1 = cafe1
-        var s_cafe2 = cafe2
-        var s_cafe3 = cafe3
         function scopeSort(a, b) { if(a.scope == b.scope){ return 0} return a.scope < b.scope ? 1 : -1; }
-        s_cafe1.sort(scopeSort);
-        s_cafe2.sort(scopeSort);
-        s_cafe3.sort(scopeSort);
-        html = recommendListScope.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title, s_cafe1, s_cafe2, s_cafe3);
+        cafe1.sort(scopeSort);
+        cafe2.sort(scopeSort);
+        cafe3.sort(scopeSort);
+        html = recommendListScope.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);
       }
       response.send(html);
     });
