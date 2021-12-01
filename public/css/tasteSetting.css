@@ -106,4 +106,13 @@ footer{
     width:100px;
 }
 
+.brandFlavor{
+    border: 1px solid black;
+    margin: 0px;
+    padding: 0;
+    width: 50%;
+    height: 60%;
+    float: left;
+}
+
 
