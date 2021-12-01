@@ -115,4 +115,10 @@ footer{
     float: left;
 }
 
+.brandLogo{
+    border: 1px solid black;
+    height: 60%;
+    width: 49%;
+    float: left;
+}
 
