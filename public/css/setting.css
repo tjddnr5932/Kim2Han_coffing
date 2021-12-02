@@ -1,11 +1,8 @@
-body {
-    font-family: "NotoSerifKR-Bold";
-    background: black;
-    color: white;
-    height: 700px;
-    /* background-image: url("./cafe_register.jpg"); */
-    background-size: 100%;
-    background-position: center;
+body{
+    font-family: "Machineat_Demo.ttf";
+    background-color: black;
+    margin: 0;
+    padding: 0;
 }
 
 @font-face {
@@ -14,7 +11,37 @@ body {
 }
 
 header {
-    height: 100px;
+    height:100px;
+    background-color: white;
+    font-family: "NotoSerifKR-Bold";
+}
+
+.l1 {
+    position: absolute;
+    right: 47%;
+    width: 200px;
+    top: 0;
+    margin-top: 0;
+}
+
+.logout {
+    position: absolute;
+    right: 10px;
+}
+
+.logout1 {
+    position: absolute;
+    right: 120px;
+}
+
+header table td {
+    padding: 35px 30px;
+}
+
+header table td a {
+    text-decoration: none;
+    font-size: larger;
+    color: black;
 }
 
 main {
