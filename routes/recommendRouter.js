@@ -179,7 +179,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe1.push(cafe_json);
@@ -192,7 +192,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -205,7 +205,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -218,7 +218,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -231,7 +231,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -244,7 +244,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -257,7 +257,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -270,7 +270,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -283,7 +283,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -296,7 +296,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -309,7 +309,7 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe2.push(cafe_json);
@@ -322,17 +322,14 @@ router.post('/:pageId', function(req, res, next){
                                   cafe_latitude: cafe[i].cafe_latitude,
                                   cafe_longitude: cafe[i].cafe_longitude,
                                   cafe_distance:distance,
-                                  cafe_bean:cafe[i].cafe_bean,
+                                  cafe_bean:cafe[i].cafe_review_public,
                                   scope:cafe[i].scope
                                 };
                                 cafe3.push(cafe_json);
                               }
                             }
                           }
-                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
-                          cafe2.sort(cafe_sort);
-                          cafe3.sort(cafe_sort);
-                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title);
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title,"(일반인 리뷰)");
                           res.send(html);
                         }
                       });
@@ -536,10 +533,7 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
-                          cafe2.sort(cafe_sort);
-                          cafe3.sort(cafe_sort);
-                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title); //사용자 lat, lon넣기
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title,"(전문가 리뷰)"); //사용자 lat, lon넣기
                           res.send(html);
                         }
                       });
