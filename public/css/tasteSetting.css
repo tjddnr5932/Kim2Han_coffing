@@ -82,8 +82,7 @@ main {
 
 footer {
     height: 625px;
-    width: 90%;
-    margin-left: 5%;
+    margin-left: 0;
 
 }
 
@@ -111,7 +110,7 @@ footer {
     align-items: center;
     height: 280px;
     width: 600px;
-    border: 1px solid black;
+    /* border: 1px solid black; */
 }
 
 .line {
