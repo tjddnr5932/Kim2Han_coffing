@@ -142,10 +142,16 @@ router.post('/:pageId', function(req, res, next){
                           console.log(error);
                         }
                         else{
+                          var user_taste_1 = [user[0].body-1, user[0].sweet,user[0].acidity,user[0].bitterness,user[0].balance];
+                          var user_taste_2 = [user[0].body, user[0].sweet-1,user[0].acidity,user[0].bitterness,user[0].balance];
+                          var user_taste_3 = [user[0].body, user[0].sweet,user[0].acidity-1,user[0].bitterness,user[0].balance];
+                          var user_taste_4 = [user[0].body, user[0].sweet,user[0].acidity,user[0].bitterness-1,user[0].balance];
+                          var user_taste_5 = [user[0].body, user[0].sweet,user[0].acidity,user[0].bitterness,user[0].balance-1];
                           for(var i =0;i<count[0].total;i++){
                             var lat_cafe = cafe[i].cafe_latitude;
                             var lon_cafe = cafe[i].cafe_longitude;
                             var cafe_bean = cafe[i].cafe_bean;
+                            var cafe_bean_split = cafe[i].cafe_bean.split("/");
                             var distance = getDistance(lat_user,lon_user,lat_cafe,lon_cafe);
                             if(distance <= user[0].distance){
                               if(taste === cafe_bean){
@@ -161,9 +167,74 @@ router.post('/:pageId', function(req, res, next){
                                 };
                                 cafe1.push(cafe_json);
                               }
+                              else if(compare(cafe_bean_split,user_taste_1)){
+                                var cafe_json = {
+                                  cafe_id: cafe[i].cafe_id,
+                                  cafe_name: cafe[i].cafe_name,
+                                  cafe_location: cafe[i].cafe_location,
+                                  cafe_latitude: cafe[i].cafe_latitude,
+                                  cafe_longitude: cafe[i].cafe_longitude,
+                                  cafe_distance:distance,
+                                  cafe_bean:cafe[i].cafe_bean,
+                                  scope:cafe[i].scope
+                                };
+                                cafe2.push(cafe_json);
+                              }
+                              else if(compare(cafe_bean_split,user_taste_2)){
+                                var cafe_json = {
+                                  cafe_id: cafe[i].cafe_id,
+                                  cafe_name: cafe[i].cafe_name,
+                                  cafe_location: cafe[i].cafe_location,
+                                  cafe_latitude: cafe[i].cafe_latitude,
+                                  cafe_longitude: cafe[i].cafe_longitude,
+                                  cafe_distance:distance,
+                                  cafe_bean:cafe[i].cafe_bean,
+                                  scope:cafe[i].scope
+                                };
+                                cafe2.push(cafe_json);
+                              }
+                              else if(compare(cafe_bean_split,user_taste_3)){
+                                var cafe_json = {
+                                  cafe_id: cafe[i].cafe_id,
+                                  cafe_name: cafe[i].cafe_name,
+                                  cafe_location: cafe[i].cafe_location,
+                                  cafe_latitude: cafe[i].cafe_latitude,
+                                  cafe_longitude: cafe[i].cafe_longitude,
+                                  cafe_distance:distance,
+                                  cafe_bean:cafe[i].cafe_bean,
+                                  scope:cafe[i].scope
+                                };
+                                cafe2.push(cafe_json);
+                              }
+                              else if(compare(cafe_bean_split,user_taste_4)){
+                                var cafe_json = {
+                                  cafe_id: cafe[i].cafe_id,
+                                  cafe_name: cafe[i].cafe_name,
+                                  cafe_location: cafe[i].cafe_location,
+                                  cafe_latitude: cafe[i].cafe_latitude,
+                                  cafe_longitude: cafe[i].cafe_longitude,
+                                  cafe_distance:distance,
+                                  cafe_bean:cafe[i].cafe_bean,
+                                  scope:cafe[i].scope
+                                };
+                                cafe2.push(cafe_json);
+                              }
+                              else if(compare(cafe_bean_split,user_taste_5)){
+                                var cafe_json = {
+                                  cafe_id: cafe[i].cafe_id,
+                                  cafe_name: cafe[i].cafe_name,
+                                  cafe_location: cafe[i].cafe_location,
+                                  cafe_latitude: cafe[i].cafe_latitude,
+                                  cafe_longitude: cafe[i].cafe_longitude,
+                                  cafe_distance:distance,
+                                  cafe_bean:cafe[i].cafe_bean,
+                                  scope:cafe[i].scope
+                                };
+                                cafe2.push(cafe_json);
+                              }
                             }
                           }
-                          console.log(cafe1);
+                          console.log(cafe2);
                         }
                       });
                     }
