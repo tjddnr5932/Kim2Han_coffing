@@ -4,9 +4,25 @@
 } */
 
 header{
-    height: 00px;
+    height: 100px;
 }
 
+body{
+  margin : 0;
+  padding : 0;
+}
+
+main{
+  background-image: url("../image/mypage1.jpg");
+  background-size : cover;
+  background-position : bottom;
+  background-repeat : repeat;
+
+  color: white;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
 .inputA {
     width: 300px;
     padding: 12px 20px;
