@@ -317,7 +317,11 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          console.log(cafe3);
+                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+                          cafe2.sort(cafe_sort);
+                          cafe3.sort(cafe_sort);
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title);
+                          res.send(html);
                         }
                       });
                     }
