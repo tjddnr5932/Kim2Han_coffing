@@ -111,17 +111,20 @@ footer{
 }
 
 .brandFlavor{
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin: 0px;
     padding: 0;
     width: 50%;
-    height: 60%;
+    height: 90%;
     float: left;
+
+    background-size: 110%;
+    background-position: center;
 }
 
 .brandLogo{
-    border: 1px solid black;
-    height: 60%;
+    /* border: 1px solid black; */
+    height: 90%;
     width: 49%;
     float: left;
 }
@@ -129,7 +132,6 @@ footer{
 .brandExplain{
     text-align: center;
     float: left;
-    height: 40%;
+    height: 10%;
 }
-
 
