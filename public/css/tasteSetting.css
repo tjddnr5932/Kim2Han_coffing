@@ -1,5 +1,5 @@
-html{
-	scroll-behavior: smooth;
+html {
+    scroll-behavior: smooth;
     color: white;
     background: white;
 }
@@ -9,28 +9,28 @@ html{
     src: url("../css/NotoSerifKR-Bold.otf");
 }
 
-input[type=radio],input[type=radio]:checked {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
+input[type=radio],
+input[type=radio]:checked {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
 }
 
-input[type=radio]{
+input[type=radio] {
     background-color: white;
     border: 0.5px solid black;
-  
+
 }
+
 input[type=radio]:checked {
     background-color: white;
     content: '✔';
     border: 17px double rgb(250, 47, 47);
     border-width: 10px;
-    
-    
 }
 
-body{
+body {
     /* background-color: black; */
     background-position: center;
     font-family: "NotoSerifKR-Bold";
@@ -39,14 +39,16 @@ body{
     margin: 0px;
     padding: 0px;
 }
-header{
+
+header {
     height: 0px;
 }
-main{
+
+main {
     width: 100%;
 }
 
-.select{
+.select {
     background-image: url("/public/image/selectFlavor1.jpg");
     background-size: 120%;
 
@@ -57,46 +59,52 @@ main{
     text-align: center;
     width: 100%;
 }
-.leftside{
+
+.leftside {
     width: 50%;
     font-size: larger;
     text-align: center;
 }
-.explaingSite{
+
+.explaingSite {
     height: 100%;
 }
-.rightside{
+
+.rightside {
     width: 50%;
     padding-top: 1%;
 }
 
-.font_ex{
+.font_ex {
     font-size: larger;
     text-align: center;
 }
 
-footer{
+footer {
     height: 625px;
     width: 90%;
-    margin-left:5%;
-    
+    margin-left: 5%;
+
 }
-#emptyBox1{
+
+#emptyBox1 {
     background-color: white;
     height: 100px;
 }
-#emptyBox2{
-    
+
+#emptyBox2 {
+
     background-color: white;
     height: 100px;
 }
-.brand{
-    height:600px;
+
+.brand {
+    height: 600px;
     display: block;
 }
 
 
-.brand td{
+.brand td {
     background-color: white;
     color: black;
     text-align: center;
@@ -106,12 +114,11 @@ footer{
     border: 1px solid black;
 }
 
-.line{
-    width:100px;
+.line {
+    width: 100px;
 }
 
-.brandFlavor{
-    /* border: 1px solid black; */
+.brandFlavor {
     margin: 0px;
     padding: 0;
     width: 50%;
@@ -122,14 +129,13 @@ footer{
     background-position: center;
 }
 
-.brandLogo{
-    /* border: 1px solid black; */
+.brandLogo {
     height: 90%;
     width: 49%;
     float: left;
 }
 
-.brandExplain{
+.brandExplain {
     text-align: center;
     float: left;
     height: 10%;
@@ -141,13 +147,19 @@ footer{
     -moz-transform: scale(1);
     -ms-transform: scale(1);
     -o-transform: scale(1);
-    transition: all 0.3s ease-in-out;   /* 부드러운 모션을 위해 추가*/  
-  }
-  .brandFlavor:hover {
+    transition: all 0.3s ease-in-out;
+}
+
+.brandFlavor:hover {
     transform: scale(1.7);
     -webkit-transform: scale(1.7);
     -moz-transform: scale(1.7);
     -ms-transform: scale(1.7);
     -o-transform: scale(1.7);
-  }
-  .img {width:325px; height:280px; overflow:hidden }
+}
+
+.img {
+    width: 325px;
+    height: 280px;
+    overflow: hidden
+}
