@@ -105,9 +105,8 @@ router.get('/', function(request, response, next){
                     phone = phone.slice(0,3) + '-' + phone.slice(3,7) + '-' + phone.slice(7);
 
                     if(list.length === filelist.length){
-                      var flist = MyPage.list(filelist, list);
                       var html = MyPage.HTML(title, request.user.id, name, age, gender, phone, yyyymmdd, loc,
-                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, pro, bean, flist);
+                        tasteArr[0], tasteArr[1], tasteArr[2], tasteArr[3], tasteArr[4], lat, lon, pro);
                       response.send(html);
                     }
 

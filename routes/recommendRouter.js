@@ -5,8 +5,6 @@ const path = require('path');
 const sanitizeHtml = require('sanitize-html');
 const nodeGeocoder = require('node-geocoder');
 const recommendpage = require('../lib/recommendPage.js');
-const recommend1 = require('../lib/recommendPages/recommend1.js');
-const recommend2 = require('../lib/recommendPages/recommend2.js');
 const recommendMap = require('../lib/recommendMap.js');
 const recommendList = require('../lib/recommendList.js');
 const recommendListDist = require('../lib/recommendListDist.js');
@@ -95,17 +93,24 @@ router.post('/list/:pageId', function(request, response){
       temp.pop();
       temp.pop();
       const loc=temp.reverse().join(" ");
-      if(filterId==="grade"){html = recommendList.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
-      else if(filterId==="distance"){html = recommendListDist.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);}
+      if(filterId==="grade"){
+        cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+        cafe2.sort(cafe_sort);
+        cafe3.sort(cafe_sort);
+        html = recommendList.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);
+      }
+      else if(filterId==="distance"){
+        cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
+        cafe2.sort(cafe_sort);
+        cafe3.sort(cafe_sort);
+        html = recommendListDist.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);
+      }
       else if(filterId==="scope"){
-        var s_cafe1 = cafe1
-        var s_cafe2 = cafe2
-        var s_cafe3 = cafe3
         function scopeSort(a, b) { if(a.scope == b.scope){ return 0} return a.scope < b.scope ? 1 : -1; }
-        s_cafe1.sort(scopeSort);
-        s_cafe2.sort(scopeSort);
-        s_cafe3.sort(scopeSort);
-        html = recommendListScope.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title, s_cafe1, s_cafe2, s_cafe3);
+        cafe1.sort(scopeSort);
+        cafe2.sort(scopeSort);
+        cafe3.sort(scopeSort);
+        html = recommendListScope.HTML(cafe1, cafe2, cafe3, res[0].body, res[0].sweet, res[0].acidity, res[0].bitterness, res[0].balance, loc, title);
       }
       response.send(html);
     });
@@ -317,10 +322,8 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
-                          cafe2.sort(cafe_sort);
-                          cafe3.sort(cafe_sort);
-                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title);
+
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title, "(원두)");
                           res.send(html);
                         }
                       });
@@ -523,10 +526,7 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
-                          cafe2.sort(cafe_sort);
-                          cafe3.sort(cafe_sort);
-                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title);
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title,"(일반인 리뷰)");
                           res.send(html);
                         }
                       });
@@ -729,10 +729,7 @@ router.post('/:pageId', function(req, res, next){
                               }
                             }
                           }
-                          cafe1.sort(cafe_sort);                   //distance를 이용하여 오름차순으로 정렬
-                          cafe2.sort(cafe_sort);
-                          cafe3.sort(cafe_sort);
-                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title); //사용자 lat, lon넣기
+                          var html = recommendMap.HTML(cafe1, cafe2,cafe3, user[0].latitude, user[0].longitude,title,"(전문가 리뷰)"); //사용자 lat, lon넣기
                           res.send(html);
                         }
                       });

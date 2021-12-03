@@ -9,6 +9,40 @@ html {
     src: url("../css/NotoSerifKR-Bold.otf");
 }
 
+header {
+    height: 100px;
+    background-color: white;
+    font-family: "NotoSerifKR-Bold";
+}
+
+.l1 {
+    position: absolute;
+    right: 47%;
+    width: 200px;
+    top: 0;
+    margin-top: 0;
+}
+
+.logout {
+    position: absolute;
+    right: 10px;
+}
+
+.logout1 {
+    position: absolute;
+    right: 120px;
+}
+
+header table td {
+    padding: 35px 30px;
+}
+
+header table td a {
+    text-decoration: none;
+    font-size: larger;
+    color: black;
+}
+
 input[type=radio],
 input[type=radio]:checked {
     appearance: none;
@@ -34,14 +68,10 @@ body {
     /* background-color: black; */
     background-position: center;
     font-family: "NotoSerifKR-Bold";
-    background-image: url("/public/image/selectFlavor1.jpg");
+    background-image: url("../image/selectFlavor1.jpg");
     background-size: 120%;
     margin: 0px;
     padding: 0px;
-}
-
-header {
-    height: 0px;
 }
 
 main {
@@ -49,7 +79,7 @@ main {
 }
 
 .select {
-    background-image: url("/public/image/selectFlavor1.jpg");
+    background-image: url("../image/selectFlavor1.jpg");
     background-size: 120%;
 
     width: 100%;
