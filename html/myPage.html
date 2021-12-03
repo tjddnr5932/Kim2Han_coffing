@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,173 +7,120 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./myPage.css">
+    <link rel="stylesheet" href="/public/css/myPage.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css' />
 
-    <title>Document</title>
-    <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+    <title>Coffing - ${title}</title>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${cofiInfor.kakao_key}&libraries=services"></script>
 </head>
 
 <body>
-    <header></header>
+    <header>
+        <table>
+            <td><a href="selectLocation.html"> &nbspSelect Location </a></td>
+            <td><a href="selectFlavor.html">Select Flavor</a></td>
+            <td><a href="">Recommende Me!</a></td>
+            <td><img class="l1"src="/public/image/makeacoffing.jpg" alt="./makeacoffing.JPG"></td>
+            <td class="logout1"><a href="/" style="color: black; text-decoration: none;">Main</a> </td>
+            <td class="logout"><a href="signIn.html">Sign In</a></td>
+        </table>
+
+    </header>
     <main>
         <table align="center" style="width: 100%;">
             <th></th>
             <th></th>
 
-            <tbody>
-                <td align="center" style="width: 33.3%; border-right: 1px solid black;">
-                    <div align="left" style="margin-left: 30%;">
-                        I D <input class="inputA" id="my_ID" type="text" style="margin-left: 24.5px;"><br>
-                        Name <input class="inputA" id="my_Name" type="text" value="" style="margin-left: 3px;"><br>
-                        Age <input class="inputB" id="my_Age" type="text" value="" style="margin:0px 19px;"> Gender
-                        <input class="inputB" id="my_Gender" type="text" value="" style="margin-left: 23px;"><br>
-                        Email <input class="inputA" id="my_Email" type="text" value="" style="margin-left: 8px;"><br>
-                        Phone <input class="inputA" id="my_Phone" type="text" value="" style="margin-left: 0px;"><br>
-                        Birth <input class="inputA" id="my_Birth" type="text" value="" style="margin-left: 12px;"><br>
-                        <div align="center" style="float: left; width: 40%; padding-right: 10px;">
-                            Expert <br>
-                            sertification <br>
-                            file</div>
-                        <div style="float: left; width: 50%;">
-                            <div class="picture"></div>
-                        </div>
-                    </div>
+          <tbody>
+              <td align="center" style="width: 50%;">
+                  <div align="left" style="margin-left: 30%;  margin-top:-130px;">
+                        <h1 style="margin-bottom: 0px;">나의 정보</h1> <br>
+                        I D <input class="inputA" id="my_ID" type="text" readonly value= "${id}" style="margin-left: 24.5px;"><br>
+                        Name <input class="inputA" id="my_Name" type="text" readonly value="${name}" style="margin-left: 3px;"><br>
+                        Age <input class="inputB" id="my_Age" type="text" readonly value="${age}" style="margin:0px 19px;"> Gender
+                        <input class="inputB" id="my_Gender" type="text" readonly value="${gender}" style="margin-left: 23px;"><br>
+                        Phone <input class="inputA" id="my_Phone" type="text" readonly value="${phone}" style="margin-left: 0px;"><br>
+                        Birth <input class="inputA" id="my_Birth" type="text" readonly value="${birth}" style="margin-left: 12px;"><br>
+                        Loc <input class="inputA" id="my_Location" type="text" readonly value="${location}" style="margin-left: 19px;"><br>
+                        <script>
+                          function pro(){
+                              if(${pro}===null){
+                                  var url =  '../mypage/proof';
+                                  fetch(url, {method: 'POST'}).then(function(response){
+                                      response.text().then(function(text){
+                                          document.querySelector('pro').innerHTML = text;
+                                      });  
+                                  });
+                              }
+                              else{
+                                  document.querySelector('pro').innerHTML = '<h3>이미 자격증이 등록 되어있습니다.</h3>';
+                              }
+                          }
+                        </script>
+                        
+                        <input class="inputB" type="button" id="pro" name="pro" value="자격증 등록" onClick="pro();"
+                        style="background-color: #ffcb00; border: #ffcb00; font-weight: bold;">
+                        <pro>
+                        </pro>
+                  </div>
 
-                </td>
-                <td align="center" style="width: 33.3%; border-right: 1px solid black;">
+                  <div align="left" style="margin-left: 30%;"" >
+                    <h1>My Review</h1>
+                    <form action="/mypage/visitedList" method="POST">
+                    <input class="inputB" type="submit" id="idCheck" name="idCheck" value="바로가기"
+                      style="background-color: #ffcb00; border: #ffcb00; font-weight: bold;">
+                    </form>
+                  </div>
+
+              </td>
+              <td align="center" style="width: 50%;">
 
                     <h1>My Flavor</h1> <br>
 
-                    <input align="center" class="inputB2" type="text" placeholder="Body" readonly>
-                    <input class="inputB2" type="text" placeholder="Acidity" readonly>
+                    <input class="inputB2" type="text" placeholder="Body" readonly>
                     <input class="inputB2" type="text" placeholder="Sweet" readonly>
+                    <input class="inputB2" type="text" placeholder="Acidity" readonly>
                     <input class="inputB2" type="text" placeholder="Bitterness" readonly>
                     <input class="inputB2" type="text" placeholder="Balance" readonly><br>
 
-                    <input class="inputB" id="myFlavor_Body" type="text" value="">
-                    <input class="inputB" id="myFlavor_Acidity" type="text" value="">
-                    <input class="inputB" id="myFlavor_Sweet" type="text" value="">
-                    <input class="inputB" id="myFlavor_Bitterness" type="text" value="">
-                    <input class="inputB" id="myFlavor_Balance" type="text" value=""><br>
-                    <input class="inputB3" type="button" onclick="location.href='./selectFlavor.html'"
-                        value="Select Flavor" style="margin-left: 311px;"><br>
+                    <input class="inputB" id="myFlavor_Body" type="text" readonly value="${body}">
+                    <input class="inputB" id="myFlavor_Sweet" type="text" readonly value="${sweet}">
+                    <input class="inputB" id="myFlavor_Acidity" type="text" readonly value="${acidity}">
+                    <input class="inputB" id="myFlavor_Bitterness" type="text" readonly value="${bitterness}">
+                    <input class="inputB" id="myFlavor_Balance" type="text" readonly value="${balance}"><br>
+
+                    <form action="/mypage/tasteSetting" method="post">
+                    <!-- bean <input class="inputA" id="my_Location" type="text" readonly value="${bean}" style="margin-left: 19px; text-align:center"> -->
+                    <input  class="inputB3" type="submit" value="Select Flavor" style="margin-left: 315px; background-color: #ffcb00; border: #ffcb00; font-weight: bold;">
+                    </form>
                     <br>
 
 
-                    <h1>My Location</h1> <input class="inputA2" type="text">
-                    <input type="button" class="inputB" class="button" onclick="location.href=''"
-                        value="Select Location">
-                    <div class="map">
-                        <!-- 여기다가 지도 넣어주세요 -->
+                    <h1>My Location</h1>
+                    <div id="map" style="width:100%;height:330px;"></div>
+                    <form action="/mypage/locationSetting" method="post">
+                    <input type="submit" class="inputB" value="위치 설정" style="margin-left: 400px; background-color: #ffcb00; border: #ffcb00; font-weight: bold;">
+                    </form>
+                    <script>
+                      var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                          mapOption = { 
+                              center: new kakao.maps.LatLng(${lat}, ${lon}), // 지도의 중심좌표
+                              level: 3 // 지도의 확대 레벨
+                          };
 
-                    </div>
+                      var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+                      // 지도를 클릭한 위치에 표출할 마커입니다
+                      var marker = new kakao.maps.Marker({ 
+                          // 지도 중심좌표에 마커를 생성합니다 
+                          position: map.getCenter() 
+                      }); 
+                      // 지도에 마커를 표시합니다
+                      marker.setMap(map);
+                    </script>
+              </td>
 
-
-                </td>
-                <td align="center" style="width:33.3%;">
-                    <h1>My Review</h1>
-                    <div class="review">
-                        <div class="review_cafeName">카페 이름</div>
-                        <div class="review_cafeFlavor">맛 평가</div>
-                        <div class="review_cafeRating">
-                            <div class='RatingStar1'>
-                                <div class='RatingScore'>
-                                    <div class='outer-star'>
-                                        <div class='inner-star'></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="review_content">내가 쓴 리뷰 내용</div>
-                    </div>
-                    <div class="review">
-                        <div class="review_cafeName">카페 이름</div>
-                        <div class="review_cafeFlavor">맛 평가</div>
-                        <div class="review_cafeRating">
-                            <div class='RatingStar1'>
-                                <div class='RatingScore'>
-                                    <div class='outer-star'>
-                                        <div class='inner-star'></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="review_content">내가 쓴 리뷰 내용</div>
-                    </div>
-                    <div class="review">
-                        <div class="review_cafeName">카페 이름</div>
-                        <div class="review_cafeFlavor">맛 평가</div>
-                        <div class="review_cafeRating">
-                            <div class='RatingStar1'>
-                                <div class='RatingScore'>
-                                    <div class='outer-star'>
-                                        <div class='inner-star'></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                RatingScore3 = ''
-                                 ratings = {
-                                    RatingScore: RatingScore1
-                                }
-                                totalRating = 5;
-                                table = document.querySelector('.RatingStar1');
-
-                                function rateIt() {
-                                    for (rating in ratings) {
-                                        ratingPercentage = ratings[rating] / totalRating * 100;
-                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
-                                        star = table.querySelector(`.${rating} .inner-star`);
-                                        numberRating = table.querySelector(`.${rating} .numberRating`);
-                                        star.style.width = ratingRounded;
-                                        numberRating.innerText = ratings[rating];
-                                    }
-                                }
-                                rateIt()   
-                            </script>
-                        </div>
-                        <div class="review_content">내가 쓴 리뷰 내용</div>
-                    </div>
-                    <div class="review">
-                        <div class="review_cafeName">카페 이름</div>
-                        <div class="review_cafeFlavor">맛 평가</div>
-                        <div class="review_cafeRating">
-                            <div class='RatingStar1'>
-                                <div class='RatingScore'>
-                                    <div class='outer-star'>
-                                        <div class='inner-star'></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                RatingScore4 = ''
-                                 ratings = {
-                                    RatingScore: RatingScore1
-                                }
-                                totalRating = 5;
-                                table = document.querySelector('.RatingStar1');
-
-                                function rateIt() {
-                                    for (rating in ratings) {
-                                        ratingPercentage = ratings[rating] / totalRating * 100;
-                                        ratingRounded = Math.round(ratingPercentage / 10) * 10 + '%';
-                                        star = table.querySelector(`.${rating} .inner-star`);
-                                        numberRating = table.querySelector(`.${rating} .numberRating`);
-                                        star.style.width = ratingRounded;
-                                        numberRating.innerText = ratings[rating];
-                                    }
-                                }
-                                rateIt()   
-                            </script>
-                        </div>
-                        <div class="review_content">내가 쓴 리뷰 내용</div>
-                    </div>
-                    
-                </td>
-            </tbody>
+          </tbody>
         </table>
 
     </main>

@@ -1,11 +1,22 @@
+
+@font-face {
+    font-family: "Machineat_Demo.ttf";
+    src: url("../css/Machineat_Demo.ttf");
+}
+
 @font-face {
     font-family: "NotoSerifKR-Bold";
     src: url("../css/NotoSerifKR-Bold.otf");
 }
 
+body{
+    margin: 0;
+    padding: 0;
+}
+
 header{
     height:100px;
-    font-family: "NotoSerifKR-Bold"; 
+    font-family: "NotoSerifKR-Bold";
 }
 .l1{
     position: absolute;
@@ -22,6 +33,7 @@ header{
     position: absolute;
     right: 120px;
 }
+
 header table td{
     padding:35px 30px;
 }
@@ -29,25 +41,20 @@ header table td a{
     text-decoration: none;
     font-size: larger;
     color: black;
-    height: 100px;
 }
+ main{
+    background-image: url("/public/image/pages/myPage.jpg");
+    background-size: 100%;
+    background-position: center;
+    color: white;
+} 
+
 
 body{
   margin : 0;
   padding : 0;
 }
 
-main{
-  background-image: url("../image/mypage1.jpg");
-  background-size : cover;
-  background-position : bottom;
-  background-repeat : repeat;
-
-  color: white;
-  background-color: white;
-  margin: 0;
-  padding: 0;
-}
 .inputA {
     width: 300px;
     padding: 12px 20px;
