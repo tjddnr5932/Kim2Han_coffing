@@ -52,11 +52,11 @@ function calc(){
       }
 
       if (count<50){ //실제 구현시 50개 이상의 리뷰데이터 일시 실행
-        bo = bo/count;
-        sw = sw/count;
-        ac = ac/count;
-        bt = bt/count;
-        ba = ba/count;
+        bo = Math.round(bo/count);
+        sw = Math.round(sw/count);
+        ac = Math.round(ac/count);
+        bt = Math.round(bt/count);
+        ba = Math.round(ba/count);
 
         const taste = bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba;
 
@@ -115,11 +115,11 @@ function calc(){
 
 
       if (count<50){ //실제 구현시 50개 이상의 리뷰데이터 일시 실행
-        bo = bo/count;
-        sw = sw/count;
-        ac = ac/count;
-        bt = bt/count;
-        ba = ba/count;
+        bo = Math.round(bo/count);
+        sw = Math.round(sw/count);
+        ac = Math.round(ac/count);
+        bt = Math.round(bt/count);
+        ba = Math.round(ba/count);
         
         const taste = bo + '/' + sw + '/' + ac + '/' + bt + '/' + ba;
 

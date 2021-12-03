@@ -48,6 +48,13 @@ header table td a{
     background-position: center;
     color: white;
 } 
+
+
+body{
+  margin : 0;
+  padding : 0;
+}
+
 .inputA {
     width: 300px;
     padding: 12px 20px;
