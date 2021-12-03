@@ -1,16 +1,56 @@
 /* html{
     background-color: black;
     color : white;
-} */
+}*/
+@font-face {
+    font-family: "Machineat_Demo.ttf";
+    src: url("../css/Machineat_Demo.ttf");
+}
+
+@font-face {
+    font-family: "NotoSerifKR-Bold";
+    src: url("../css/NotoSerifKR-Bold.otf");
+}
+
+body{
+    margin: 0;
+    padding: 0;
+}
 
 header{
-    height: 00px;
+    height:100px;
+    font-family: "NotoSerifKR-Bold";
 }
-/* main{
-    background-image: url("./cafe3.jpg");
+.l1{
+    position: absolute;
+    right: 47%;
+    width: 200px;
+    top: 0;
+    margin-top: 0;
+}
+.logout{
+    position: absolute;
+    right: 10px;
+}
+.logout1{
+    position: absolute;
+    right: 120px;
+}
+
+header table td{
+    padding:35px 30px;
+}
+header table td a{
+    text-decoration: none;
+    font-size: larger;
+    color: black;
+}
+ main{
+    background-image: url("/public/image/pages/myPage.jpg");
     background-size: 100%;
+    background-position: center;
     color: white;
-} */
+} 
 .inputA {
     width: 300px;
     padding: 12px 20px;
