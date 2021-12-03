@@ -29,12 +29,25 @@ header table td a{
     text-decoration: none;
     font-size: larger;
     color: black;
+    height: 100px;
 }
-/* main{
-    background-image: url("./cafe3.jpg");
-    background-size: 100%;
-    color: white;
-} */
+
+body{
+  margin : 0;
+  padding : 0;
+}
+
+main{
+  background-image: url("../image/mypage1.jpg");
+  background-size : cover;
+  background-position : bottom;
+  background-repeat : repeat;
+
+  color: white;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
 .inputA {
     width: 300px;
     padding: 12px 20px;

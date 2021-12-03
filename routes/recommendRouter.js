@@ -339,7 +339,6 @@ router.post('/:pageId', function(req, res, next){
                 }
                 else{
                   var taste = user[0].taste;
-                  var taste_split = taste.split("/");
                   var lat_user = user[0].latitude;
                   var lon_user = user[0].longitude;
                   db.query(`SELECT * FROM cafe where city="${user[0].city}"`,function(error,cafe){
@@ -543,7 +542,6 @@ router.post('/:pageId', function(req, res, next){
                 }
                 else{
                   var taste = user[0].taste;
-                  var taste_split = taste.split("/");
                   var lat_user = user[0].latitude;
                   var lon_user = user[0].longitude;
                   db.query(`SELECT * FROM cafe where city="${user[0].city}"`,function(error,cafe){
