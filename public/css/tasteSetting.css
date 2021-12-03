@@ -81,7 +81,7 @@ main {
 }
 
 footer {
-    height: 625px;
+    height: 680px;
     margin-left: 0;
 
 }
@@ -92,7 +92,6 @@ footer {
 }
 
 #emptyBox2 {
-
     background-color: white;
     height: 100px;
 }
@@ -110,7 +109,6 @@ footer {
     align-items: center;
     height: 280px;
     width: 600px;
-    /* border: 1px solid black; */
 }
 
 .line {
