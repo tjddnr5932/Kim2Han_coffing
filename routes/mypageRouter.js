@@ -73,7 +73,7 @@ router.get('/', function(request, response, next){
                     else{
                       bean = JSON.parse(beanStr).beankr;
                     }
-                             
+
                     if(taste===null){
                       tasteArr=[0,0,0,0,0];
                     }
@@ -99,7 +99,7 @@ router.get('/', function(request, response, next){
                       temp.pop();
                       loc=temp.reverse().join(" ");
                     }
-                    
+
                     let yyyymmdd = new Date(birth.getFullYear(), birth.getMonth(), birth.getDate(), 9).toISOString().substring(0,10);
 
                     phone = phone.slice(0,3) + '-' + phone.slice(3,7) + '-' + phone.slice(7);
@@ -153,17 +153,11 @@ router.post('/taste_process', function(request, response){
     var post = request.body;
     var id = request.user.id;
     const taste = post.body+"/"+post.sweet+"/"+post.acidity+"/"+post.bitterness+"/"+post.balance;
-    const bean_item = confiInfor.found_bean(taste, post.body, post.sweet, post.acidity, post.bitterness, post.balance);
-    if(bean_item===undefined){
-      response.send("<script>alert('선택하신 맛에 일치하는 원두가 없습니다.');location.href='/mypage';</script>");
-    }
-    else{
-      const beanStr = JSON.stringify(bean_item);
-      console.log(`UPDATE user SET bean='${beanStr}', taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-      db.query(`UPDATE user SET bean='${beanStr}', taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-      response.send(`<script>alert('${bean_item.beankr}(이/가) 선택되었습니다.');location.href='/mypage';</script>`);
-      response.end();
-    }
+
+    db.query(`UPDATE user SET taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
+    response.writeHead(302, {Location : '/mypage'});
+    response.end();
+
 });
 
 
@@ -215,7 +209,7 @@ router.post('/location_process', function(request, response){
             console.log(err);
         });
     })
-    
+
     .catch((err)=> {
     console.log(err);
     });
@@ -324,10 +318,10 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
           const scope = result[0].scope;
           const photoStr = result[0].photo;
           let photo;
-          
+
 
           const distance = viewCafe.DIST(res[0].latitude, res[0].longitude, result[0].cafe_latitude, result[0].cafe_longitude);
-          var body = `      
+          var body = `
             <h1 style="margin-top: 80px;">${cafe_name}</h1>
             원두 <input class="inputA" id="my_ID" type="text" readonly value= "${cafe_bean}" style="margin-left: 24.5px;"><br>
             위치 <input class="inputA" id="my_Birth" type="text" readonly value="${cafe_location}" style="margin-left: 24.5px;"><br>
@@ -351,7 +345,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
           let img = `<img src = '../../image/test2.jpg' style='width:auto; height:300px'/>
           <img src = '../../image/test2.jpg' style='width:auto; height:300px'/>`;
           if(photoStr==undefined);
-          else{ 
+          else{
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
@@ -385,8 +379,8 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
       var scope = post.scope;
       var comment = post.comment;
       console.log(cafe_id);
-    
-      
+
+
       if(result[0].pro){
         db.query(`SELECT COUNT(*) as total FROM review_pro`,function(err, count){ //전문가 리뷰 테이블 튜플 세기
           if(err){
@@ -451,14 +445,14 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
                     }
                   }
                 });
-                
+
               }
               else{
                 response.redirect('/mypage');
               }
             });
           }
-        });  
+        });
       }
     }
   });
@@ -626,7 +620,7 @@ router.post('/:pageId', function(request, response, next){
                           <form action="view_cafe/normal" method="post">
                           <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                           <td><input class="inputB" type="submit" value="카페 정보"><td>
-                          </form>             
+                          </form>
                           <form action="write_review" method="post">
                           <input type="hidden" name="cafe_id" value = "${res[0].cafe_id}">
                           <input type="hidden" name="cafe_name" value = "${res[0].cafe_name}">
