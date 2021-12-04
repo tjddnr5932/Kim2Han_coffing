@@ -43,11 +43,11 @@ header table td a{
     color: black;
 }
  main{
-    background-image: url("/public/image/pages/myPage.jpg");
+    background-image: url("../image/pages/myPage.jpg");
     background-size: 100%;
     background-position: center;
     color: white;
-} 
+}
 
 
 body{
