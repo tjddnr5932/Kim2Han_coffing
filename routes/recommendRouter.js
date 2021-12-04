@@ -354,12 +354,12 @@ router.post('/:pageId', function(req, res, next){
                   var taste = user[0].taste;
                   var lat_user = user[0].latitude;
                   var lon_user = user[0].longitude;
-                  db.query(`SELECT * FROM cafe where city="${user[0].city}"`,function(error,cafe){
+                  db.query(`SELECT * FROM cafe where city="${user[0].city}" AND NOT cafe_review_public is NULL`,function(error,cafe){
                     if(error){
                       console.log(error);
                     }
                     else{
-                      db.query(`SELECT COUNT(*) as total FROM cafe where city="${user[0].city}"`,function(error, count){
+                      db.query(`SELECT COUNT(*) as total FROM cafe where city="${user[0].city}" AND NOT cafe_review_public is NULL`,function(error, count){
                         if(error){
                           console.log(error);
                         }
@@ -378,7 +378,7 @@ router.post('/:pageId', function(req, res, next){
                             var lat_cafe = cafe[i].cafe_latitude;
                             var lon_cafe = cafe[i].cafe_longitude;
                             var cafe_review_public = cafe[i].cafe_review_public;
-                            var cafe_review_public_split = cafe[i].cafe_review_public.split("/");
+                            var cafe_review_public_split = cafe[i].cafe_review_public.split("/"); //이곳 문제로 보임
                             var distance = getDistance(lat_user,lon_user,lat_cafe,lon_cafe);
                             if(distance <= user[0].distance){
                               if(taste === cafe_review_public){
@@ -581,6 +581,20 @@ router.post('/:pageId', function(req, res, next){
                             var lat_cafe = cafe[i].cafe_latitude;
                             var lon_cafe = cafe[i].cafe_longitude;
                             var cafe_review_pro = cafe[i].cafe_review_pro;
+                            if(cafe_review_pro===null){
+                              var cafe_json = {
+                                cafe_id: cafe[i].cafe_id,
+                                cafe_name: cafe[i].cafe_name,
+                                cafe_location: cafe[i].cafe_location,
+                                cafe_latitude: cafe[i].cafe_latitude,
+                                cafe_longitude: cafe[i].cafe_longitude,
+                                cafe_distance:distance,
+                                cafe_bean:cafe[i].cafe_bean+"(원두)",
+                                scope:cafe[i].scope
+                              };
+                              cafe3.push(cafe_json);
+                              continue;
+                            }
                             var cafe_review_pro_split = cafe[i].cafe_review_pro.split("/");
                             var distance = getDistance(lat_user,lon_user,lat_cafe,lon_cafe);
                             if(distance <= user[0].distance){
