@@ -153,17 +153,12 @@ router.post('/taste_process', function(request, response){
     var post = request.body;
     var id = request.user.id;
     const taste = post.body+"/"+post.sweet+"/"+post.acidity+"/"+post.bitterness+"/"+post.balance;
-    const bean_item = confiInfor.found_bean(taste, post.body, post.sweet, post.acidity, post.bitterness, post.balance);
-    if(bean_item===undefined){
-      response.send("<script>alert('선택하신 맛에 일치하는 원두가 없습니다.');location.href='/mypage';</script>");
-    }
-    else{
-      const beanStr = JSON.stringify(bean_item);
-      console.log(`UPDATE user SET bean='${beanStr}', taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-      db.query(`UPDATE user SET bean='${beanStr}', taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-      response.send(`<script>alert('${bean_item.beankr}(이/가) 선택되었습니다.');location.href='/mypage';</script>`);
+
+
+      db.query(`UPDATE user SET  taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
+      response.writeHead(302, {Location : '/mypage'});
       response.end();
-    }
+
 });
 
 
@@ -567,28 +562,15 @@ router.post('/:pageId', function(request, response, next){
                   console.log(error);
                 }
                 else{
+                  var html = visitedList.HTML(sanitizeTitle);
+                  response.write(html);
                   if(result[0].visited===null){
                     response.write(`
-                    <!doctype html>
-                    <html>
-                    <head>
-                    <meta charset="UTF-8">
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <link rel="stylesheet" href="../css/tasteSetting.css">
-                    <title>Coffing - ${title}</title>
-                    </head>
-                    <body>
-                    <h1 align="center" style="margin-top:200px">방문한 카페 목록</h1>
                     <h3 align="center">방문 기록이 없습니다.</h3>
-                    </body>
-                    </html>
                     `);
                     response.end();
                   }
                   else{
-                    var html = visitedList.HTML(sanitizeTitle);
-                    response.write(html);
                     var visited_list = JSON.parse(result[0].visited); // visited 데이터를 string에서 JSON형태로 변환
 
                     var i = 0;
