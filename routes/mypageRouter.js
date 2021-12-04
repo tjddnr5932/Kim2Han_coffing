@@ -185,38 +185,7 @@ router.post('/mlocation_process', function(request, response){
     response.end();
 });
 
-router.post('/location_process', function(request, response){
-    var post = request.body;
-    var _loc = post.loc;
-    var _lat;
-    var _lng;
-    var distance = post.distance;
 
-    geocoder.geocode(_loc)
-    .then((result)=> {
-        _lat = result[0].latitude;
-        _lng = result[0].longitude;
-        geocoder.reverse({lat:_lat, lon:_lng})
-        .then((res)=> {
-            const loc = res[0].formattedAddress;
-            const temp = loc.split(",");
-            const tmp = temp.reverse();
-            const citytemp = tmp[3];
-            const city = citytemp.replace(/ /g, '');
-            db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
-        })
-        .catch((err)=> {
-            console.log(err);
-        });
-    })
-
-    .catch((err)=> {
-    console.log(err);
-    });
-
-    response.writeHead(302, {Location : '/mypage'});
-    response.end();
-});
 
 router.post('/visit_cafe', function(request, response){  // 방문한 카페 등록하기
   var post = request.body;
@@ -350,7 +319,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
-              img += `<img src = ${photo[0].src} />` //src는 photo json배열이 가지는 img의 경로
+              img += `<img src = ${photo[i].src} style="width:400px;height:300px;" />` //src는 photo json배열이 가지는 img의 경로
               i++;
             }
           }
