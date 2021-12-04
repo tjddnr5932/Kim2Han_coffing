@@ -1,6 +1,6 @@
 body{
     font-family: "Machineat_Demo.ttf";
-    background-color: black;
+    background-color: white;
     margin: 0;
     padding: 0;
 }
@@ -48,8 +48,8 @@ main {
     font-family: "NotoSerifKR-Bold";
     background: black;
     color: white;
-    height: 700px;
-    /* background-image: url("./cafe_register.jpg"); */
+    height: 800px;
+    background-image: url("../image/selectFlavor1.jpg");
     background-size: 100%;
     background-position: center;
 }
@@ -87,9 +87,11 @@ td{
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box; 
+    background-color: #ffcb00; 
+    border: #ffcb00; 
+    font-weight: bold;
 }
 
 

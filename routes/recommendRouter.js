@@ -72,8 +72,21 @@ router.post('/', function(request, response, next){
         response.send("<script>alert('로그인이 필요합니다.');location.href='/';</script>");
       }
       else{
-        var html = recommendpage.HTML(auth.StatusUI(request));
-        response.send(html);
+        db.query(`SELECT location, taste FROM user WHERE id = "${request.user.id}"`, function(err, res){
+          if(res[0].location===null && res[0].taste===null) {
+            response.send("<script>alert('위치 설정과 맛 설정이 필요합니다.');location.href='/mypage';</script>");
+          }
+          else if(res[0].location===null) {
+            response.send("<script>alert('위치 설정이 필요합니다.');location.href='/mypage';</script>");
+          }
+          else if(res[0].taste===null) {
+            response.send("<script>alert('맛 설정이 필요합니다.');location.href='/mypage';</script>");
+          }
+          else{
+            var html = recommendpage.HTML(auth.StatusUI(request));
+            response.send(html);
+          }
+        });
       }
     }
   });

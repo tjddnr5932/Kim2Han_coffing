@@ -154,9 +154,9 @@ router.post('/taste_process', function(request, response){
     var id = request.user.id;
     const taste = post.body+"/"+post.sweet+"/"+post.acidity+"/"+post.bitterness+"/"+post.balance;
 
-    db.query(`UPDATE user SET taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
-    response.writeHead(302, {Location : '/mypage'});
-    response.end();
+      db.query(`UPDATE user SET  taste="${taste}", body = ${post.body} , sweet = ${post.sweet}, acidity = ${post.acidity}, bitterness = ${post.bitterness}, balance = ${post.balance} WHERE id = "${id}"`);
+      response.writeHead(302, {Location : '/mypage'});
+      response.end();
 
 });
 
@@ -342,14 +342,13 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
             `;
           }
           //test용 사진
-          let img = `<img src = '../../image/test2.jpg' style='width:auto; height:300px'/>
-          <img src = '../../image/test2.jpg' style='width:auto; height:300px'/>`;
+
           if(photoStr==undefined);
           else{
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
-              img += `<img src = ${photo[0].src.replace('public', '')} />` //src는 photo json배열이 가지는 img의 경로로 정적 image 폴더로 image는 생략한다.
+              img += `<img src = ${photo[0].src} />` //src는 photo json배열이 가지는 img의 경로
               i++;
             }
           }
@@ -565,28 +564,15 @@ router.post('/:pageId', function(request, response, next){
                   console.log(error);
                 }
                 else{
+                  var html = visitedList.HTML(sanitizeTitle);
+                  response.write(html);
                   if(result[0].visited===null){
                     response.write(`
-                    <!doctype html>
-                    <html>
-                    <head>
-                    <meta charset="UTF-8">
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <link rel="stylesheet" href="../css/tasteSetting.css">
-                    <title>Coffing - ${title}</title>
-                    </head>
-                    <body>
-                    <h1 align="center" style="margin-top:200px">방문한 카페 목록</h1>
                     <h3 align="center">방문 기록이 없습니다.</h3>
-                    </body>
-                    </html>
                     `);
                     response.end();
                   }
                   else{
-                    var html = visitedList.HTML(sanitizeTitle);
-                    response.write(html);
                     var visited_list = JSON.parse(result[0].visited); // visited 데이터를 string에서 JSON형태로 변환
 
                     var i = 0;
