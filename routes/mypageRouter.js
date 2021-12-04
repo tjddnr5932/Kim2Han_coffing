@@ -317,6 +317,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
           if(cafe_review_pro===null) cafe_review_pro ="준비중!"
           const scope = result[0].scope;
           const photoStr = result[0].photo;
+          var img ="";
           let photo;
 
 
