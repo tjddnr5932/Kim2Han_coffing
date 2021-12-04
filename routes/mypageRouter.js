@@ -534,8 +534,12 @@ router.post('/:pageId', function(request, response, next){
                 response.send(html);
             }
             else if(title === "locationSetting"){
-                var html = locationSetting.HTML(sanitizeTitle);
-                response.send(html);
+                db.query(`SELECT latitude,longitude FROM user WHERE id="${request.user.id}"`,function(err,result){
+                  var user_lat = result[0].latitude;
+                  var user_lon = result[0].longitude;
+                  var html = locationSetting.HTML(sanitizeTitle,user_lat,user_lon);
+                  response.send(html);
+                });
             }
             else if(title === "proof"){
               db.query(`SELECT id FROM proof_data WHERE id = "${request.user.id}"`, function(err, result){
