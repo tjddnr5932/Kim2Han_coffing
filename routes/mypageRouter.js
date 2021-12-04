@@ -185,38 +185,7 @@ router.post('/mlocation_process', function(request, response){
     response.end();
 });
 
-router.post('/location_process', function(request, response){
-    var post = request.body;
-    var _loc = post.loc;
-    var _lat;
-    var _lng;
-    var distance = post.distance;
 
-    geocoder.geocode(_loc)
-    .then((result)=> {
-        _lat = result[0].latitude;
-        _lng = result[0].longitude;
-        geocoder.reverse({lat:_lat, lon:_lng})
-        .then((res)=> {
-            const loc = res[0].formattedAddress;
-            const temp = loc.split(",");
-            const tmp = temp.reverse();
-            const citytemp = tmp[3];
-            const city = citytemp.replace(/ /g, '');
-            db.query(`UPDATE user SET distance="${distance}", city="${city}", location = "${loc}", latitude = "${_lat}", longitude = "${_lng}" WHERE id = "${request.user.id}" `);
-        })
-        .catch((err)=> {
-            console.log(err);
-        });
-    })
-
-    .catch((err)=> {
-    console.log(err);
-    });
-
-    response.writeHead(302, {Location : '/mypage'});
-    response.end();
-});
 
 router.post('/visit_cafe', function(request, response){  // 방문한 카페 등록하기
   var post = request.body;
@@ -265,13 +234,14 @@ router.post('/visit_cafe', function(request, response){  // 방문한 카페 등
 router.post('/comment_public/:cafe_id', function(request, response){ //일반인 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_public WHERE cafe_id = "${cafe_id}"`, function(error, result){
-
     var body = "<h1>일반인 댓글 보기</h1>";
     var i = 0;
+    console.log(cafe_id);
     while(i<result.length){
       if(result[i].comment!=null&&result[i].comment!='')body+=`<p>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
+    console.log(body);
     response.send(body);
   });
 });
@@ -287,7 +257,7 @@ router.post('/comment_pro/:cafe_id', function(request, response){ //전문가 �
       if(result[i].comment!=null&&result[i].comment!='')body+=`<p>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
-    response.send(body);
+    response.send(body,);
   });
 });
 
@@ -296,7 +266,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
   var filterId = path.parse(request.params.pageId).base;
   const post = request.body;
   const cafe_id = post.cafe_id;
-  console.log(cafe_id);
+  console.log("gdgd",cafe_id);
 
   db.query(`SELECT * FROM cafe WHERE cafe_id = "${cafe_id}"`, function(error, result){
     if(error){
@@ -349,7 +319,7 @@ router.post('/view_cafe/:pageId', function(request,response){ //카페 정보 �
             photo = JSON.parse(photoStr);
             var i = 0;
             while(i<photo.length){
-              img += `<img src = ${photo[0].src} />` //src는 photo json배열이 가지는 img의 경로
+              img += `<img src = ${photo[i].src} style="width:400px;height:300px;" />` //src는 photo json배열이 가지는 img의 경로
               i++;
             }
           }
@@ -378,81 +348,84 @@ router.post('/write_review_process', function(request, response){ // 리뷰 작�
       var balance = post.balance;
       var scope = post.scope;
       var comment = post.comment;
-      console.log(cafe_id);
 
-
-      if(result[0].pro){
-        db.query(`SELECT COUNT(*) as total FROM review_pro`,function(err, count){ //전문가 리뷰 테이블 튜플 세기
-          if(err){
-            console.log(err);
-          }
-          else{
-            db.query(`SELECT review_num FROM review_pro WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
-              if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 전문가 리뷰 테이블에 저장
-                db.query(`INSERT INTO review_pro(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].tatal, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
-                db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
-                  if(er){
-                    console.log(er);
-                  }
-                  else{
-                    var visited = JSON.parse(visit[0].visited);
-                    var i = 0;
-                    while(i<visited.length){
-                      if(visited[i].cafe_id===cafe_id){
-                        visited[i].review = true;
-                        var temp = JSON.stringify(visited);
-                        db.query(`UPDATE user SET visited = '${temp}' WHERE id ="${request.user.id}"`)
-                        return response.redirect('/mypage');
-                      }
-                      i++;
-                    }
-                  }
-                });
-              }
-              else{
-                response.redirect('/mypage');
-              }
-            });
-          }
-        });
+      if(comment.length >= 100){
+        response.send("<script>alert('커멘트는 100자 미만입니다.');location.href='/mypage';</script>");
       }
       else{
-        db.query(`SELECT COUNT(*) as total FROM review_public`,function(err, count){ //일반인 리뷰 테이블 튜플 세기
-          if(err){
-            console.log(err);
-          }
-          else{
-            db.query(`SELECT review_num FROM review_public WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
-              if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 일반인 리뷰 테이블에 저장
-                console.log(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
-                db.query(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
-                db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
-                  if(er){
-                    console.log(er);
-                  }
-                  else{
-                    console.log(visit[0].visited);
-                    var visited = JSON.parse(visit[0].visited);
-                    var i = 0;
-                    while(i<visited.length){
-                      if(visited[i].cafe_id===cafe_id){
-                        visited[i].review = true;
-                        var temp = JSON.stringify(visited);
-                        db.query(`UPDATE user SET visited = '${temp}' WHERE id ="${request.user.id}"`)
-                        return response.redirect('/mypage');
-                      }
-                      i++;
+        if(result[0].pro){
+          db.query(`SELECT COUNT(*) as total FROM review_pro`,function(err, count){ //전문가 리뷰 테이블 튜플 세기
+            if(err){
+              console.log(err);
+            }
+            else{
+              db.query(`SELECT review_num FROM review_pro WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
+                if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 전문가 리뷰 테이블에 저장
+                  db.query(`INSERT INTO review_pro(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].tatal, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
+                  db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
+                    if(er){
+                      console.log(er);
                     }
-                  }
-                });
+                    else{
+                      var visited = JSON.parse(visit[0].visited);
+                      var i = 0;
+                      while(i<visited.length){
+                        if(visited[i].cafe_id===cafe_id){
+                          visited[i].review = true;
+                          var temp = JSON.stringify(visited);
+                          db.query(`UPDATE user SET visited = '${temp}' WHERE id ="${request.user.id}"`)
+                          return response.redirect('/mypage');
+                        }
+                        i++;
+                      }
+                    }
+                  });
+                }
+                else{
+                  response.redirect('/mypage');
+                }
+              });
+            }
+          });
+        }
+        else{
+          db.query(`SELECT COUNT(*) as total FROM review_public`,function(err, count){ //일반인 리뷰 테이블 튜플 세기
+            if(err){
+              console.log(err);
+            }
+            else{
+              db.query(`SELECT review_num FROM review_public WHERE cafe_id="${cafe_id}" AND user_id ="${user_id}"`, function(er, res){ // 사용자가 해당 카페의 리뷰를 남겼으면 다시 남기지 못한다.
+                if(res[0]===undefined){ //사용자가 리뷰를 아직 안남겼으면 남긴 데이터를 일반인 리뷰 테이블에 저장
+                  console.log(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
+                  db.query(`INSERT INTO review_public(review_num, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment) value(?,?,?,?,?,?,?,?,?,?)`, [count[0].total, cafe_id, user_id, body, sweet, acidity, bitterness, balance, scope, comment]);
+                  db.query(`SELECT visited FROM user WHERE id = "${user_id}"`, function(er, visit){
+                    if(er){
+                      console.log(er);
+                    }
+                    else{
+                      console.log(visit[0].visited);
+                      var visited = JSON.parse(visit[0].visited);
+                      var i = 0;
+                      while(i<visited.length){
+                        if(visited[i].cafe_id===cafe_id){
+                          visited[i].review = true;
+                          var temp = JSON.stringify(visited);
+                          db.query(`UPDATE user SET visited = '${temp}' WHERE id ="${request.user.id}"`)
+                          return response.redirect('/mypage');
+                        }
+                        i++;
+                      }
+                    }
+                  });
 
-              }
-              else{
-                response.redirect('/mypage');
-              }
-            });
-          }
-        });
+                }
+                else{
+                  response.redirect('/mypage');
+                }
+              });
+            }
+          });
+        }
       }
     }
   });
@@ -500,7 +473,7 @@ router.post('/my_review', function(request, response, next){
               console.log(er);
             }
             else{
-              var comment = res[0].comment;
+              var comment = row[0].comment;
               if(comment===undefined){
                 comment="코멘트를 작성하지 않으셨습니다."
               }
