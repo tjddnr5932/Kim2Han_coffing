@@ -17,7 +17,7 @@ body{
 }
 header{
     height:100px;
-    font-family: "NotoSerifKR-Bold"; 
+    font-family: "NotoSerifKR-Bold";
 }
 .l1{
     position: absolute;
@@ -48,5 +48,5 @@ main{
     background-size: cover;
 }
 main div{
-    padding-top: 300px;
+    padding-top: 100px;
 }
