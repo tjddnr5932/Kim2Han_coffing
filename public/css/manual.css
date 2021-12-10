@@ -55,7 +55,7 @@ main div{
 
 .section input[id*="slide"] {display:none;}
 .section .slidewrap {
-    max-width:1200px;
+    max-width:1500px;
     margin:0 auto;
 }
 .section .slidelist {
@@ -105,12 +105,29 @@ main div{
 .section input[id="slide06"]:checked ~ .slidewrap .slide-pagelist > li:nth-child(6) > label {background:#999;}
 
 .textbox{
-    height: 500px;
+    background-color: white;
+
+    height: 600px;
 }
 .content{
     margin: 0;
     padding: 0;
     font-size: 100px;
-    color: white;
     height: 100%;
+}
+
+.slideImage{
+border: 1px solid red;
+margin: 0;
+padding: 0;
+height: 100%;
+width: 66%;
+}
+.slideContent{
+border: 1px solid blue;
+margin: 0;
+padding: 0;
+
+width: 33%;
+height: 100%;
 }
