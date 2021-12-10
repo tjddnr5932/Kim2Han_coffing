@@ -48,5 +48,17 @@ main{
     background-color: black;
 }
 main div{
-    padding-top: 30px;
+    /* padding-top: 30px; */
 }
+
+.section input[id*="slide"] {display:none;}
+.section .slidewrap {max-width:1200px;margin:0 auto;}
+.section .slidelist {white-space:nowrap;font-size:0;overflow:hidden;position:relative;}
+.section .slidelist > li {display:inline-block;vertical-align:middle;width:100%;transition:all .5s;}
+
+.section input[id="slide01"]:checked ~ .slidewrap .slidelist > li {transform:translateX(0%);}
+.section input[id="slide02"]:checked ~ .slidewrap .slidelist > li {transform:translateX(-100%);}
+.section input[id="slide03"]:checked ~ .slidewrap .slidelist > li {transform:translateX(-200%);}
+.section input[id="slide04"]:checked ~ .slidewrap .slidelist > li {transform:translateX(-300%);}
+.section input[id="slide05"]:checked ~ .slidewrap .slidelist > li {transform:translateX(-400%);}
+.section input[id="slide06"]:checked ~ .slidewrap .slidelist > li {transform:translateX(-500%);}
