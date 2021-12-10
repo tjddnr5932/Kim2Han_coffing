@@ -48,8 +48,10 @@ main{
     background-color: black;
 }
 main div{
-    /* padding-top: 30px; */
+    padding-top: 30px;
 }
+
+* {margin:0;padding:0;}
 
 .section input[id*="slide"] {display:none;}
 .section .slidewrap {
@@ -91,7 +93,7 @@ main div{
     display:block;
     padding:8px 30px;
     border-radius:30px;
-    background:#ccc;
+    background:#fcb700;
     margin:20px 10px;
     cursor:pointer;
 }
@@ -101,3 +103,14 @@ main div{
 .section input[id="slide04"]:checked ~ .slidewrap .slide-pagelist > li:nth-child(4) > label {background:#999;}
 .section input[id="slide05"]:checked ~ .slidewrap .slide-pagelist > li:nth-child(5) > label {background:#999;}
 .section input[id="slide06"]:checked ~ .slidewrap .slide-pagelist > li:nth-child(6) > label {background:#999;}
+
+.textbox{
+    height: 500px;
+}
+.content{
+    margin: 0;
+    padding: 0;
+    font-size: 100px;
+    color: white;
+    height: 100%;
+}
