@@ -108,6 +108,8 @@ main div{
     background-color: white;
     padding: 0;
     height: 600px;
+    border: 1px solid white;
+    border-radius: 5px;
 }
 .content{
     margin: 0;
@@ -123,9 +125,9 @@ main div{
 .imgRight div{
     float: right;
 }
-
+/* 슬라이드 내용 채우고 border 선 지워주세요  */
 .slideImage{
-    border: 1px solid red;
+    border-left: 1px solid black;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -133,7 +135,8 @@ main div{
     }
 
 .slideContent{
-    border: 1px solid blue;
+    
+    border-left: 1px solid black;
     margin: 0;
     padding: 0;
     width: 33.3%;
