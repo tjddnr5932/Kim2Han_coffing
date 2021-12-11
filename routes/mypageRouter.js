@@ -234,14 +234,14 @@ router.post('/visit_cafe', function(request, response){  // 방문한 카페 등
 router.post('/comment_public/:cafe_id', function(request, response){ //일반인 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_public WHERE cafe_id = "${cafe_id}"`, function(error, result){
-    var body = "<h1>일반인 댓글 보기</h1>";
+    var body = "<div style='width:730px;height:290px; overflow:auto;'><h1>일반인 댓글 보기</h1>";
     var i = 0;
     console.log(cafe_id);
     while(i<result.length){
       if(result[i].comment!=null&&result[i].comment!='')body+=`<p>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
-    console.log(body);
+    body+="</div>"
     response.send(body);
   });
 });
@@ -250,13 +250,14 @@ router.post('/comment_public/:cafe_id', function(request, response){ //일반인
 router.post('/comment_pro/:cafe_id', function(request, response){ //전문가 댓글 보기
   const cafe_id = path.parse(request.params.cafe_id).base;
   db.query(`SELECT comment FROM review_pro WHERE cafe_id = "${cafe_id}"`, function(error, result){
-    var body = "<h1>전문가 댓글 보기</h1>";
+    var body = "<div style='width:730px;height:290px; overflow:auto;'><h1>전문가 댓글 보기</h1>";
     var i = 0;
     console.log(result.length);
     while(i<result.length){
       if(result[i].comment!=null&&result[i].comment!='')body+=`<p>${i}번째: ${result[i].comment}</p>`;
       i++;
     }
+    body+="</div>"
     response.send(body,);
   });
 });
